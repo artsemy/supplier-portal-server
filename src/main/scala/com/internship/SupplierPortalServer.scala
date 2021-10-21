@@ -10,7 +10,7 @@ import com.internship.context.AppContext
 
 import scala.concurrent.ExecutionContext
 
-object PortalServer extends IOApp {
+object SupplierPortalServer extends IOApp {
 
   override def run(args: List[String]): IO[ExitCode] =
     serverResource[IO]

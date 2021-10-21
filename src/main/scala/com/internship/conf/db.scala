@@ -39,7 +39,6 @@ object db {
           .configure()
           .dataSource(dbConf.url, dbConf.user, dbConf.password)
           .locations(s"${dbConf.migrationLocation}/${dbConf.provider}")
-//          .baselineOnMigrate(true) //added because of error
           .load()
       )
     }

@@ -12,7 +12,7 @@ VALUES
 (1, 'group1'),
 (2, 'group2');
 
-INSERT INTO user_group(id, user_id, group_id)
+INSERT INTO users_groups(id, users_id, groups_id)
 VALUES
 (1, 1, 1),
 (2, 3, 1),
