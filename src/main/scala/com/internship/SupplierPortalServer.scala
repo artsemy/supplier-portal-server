@@ -29,5 +29,5 @@ object SupplierPortalServer extends IOApp {
   } yield server
 }
 
-// curl "localhost:9000/portal/logIn" -H "Content-Type: application/json" -d "{\"login\": \"arty1\", \"password\": \"1234\"}"
+// curl -XGET "localhost:9000/portal/logIn" -H "Content-Type: application/json" -d "{\"login\": \"arty1\", \"password\": \"1234\"}"
 // curl "localhost:9000/portal/test"

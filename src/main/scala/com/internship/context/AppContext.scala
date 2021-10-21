@@ -18,8 +18,8 @@ object AppContext {
     migrator <- Resource.eval(migrator[F](conf.db))
     _        <- Resource.eval(migrator.migrate())
 
-    authDao     = UserDAO.of[F](tx)
-    userService = UserService.of(authDao)
+    userDao     = UserDAO.of[F](tx)
+    userService = UserService.of(userDao)
     httpApp     = UserRoutes.routes[F](userService).orNotFound
   } yield httpApp
 

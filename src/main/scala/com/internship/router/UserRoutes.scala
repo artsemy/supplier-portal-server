@@ -2,7 +2,7 @@ package com.internship.router
 
 import cats.effect.Sync
 import cats.implicits._
-import com.internship.dao.error.UserDAOError
+import com.internship.error.{SupplierPortalError, UserError}
 import com.internship.router.dto.AuthDto
 import com.internship.service.UserService
 import org.http4s.{EntityEncoder, HttpRoutes, Response}
@@ -24,23 +24,23 @@ object UserRoutes {
     }
 
     def test(): HttpRoutes[F] = HttpRoutes.of[F] { case GET -> Root / "portal" / "test" =>
-      val res: Either[UserDAOError, String] = Right("true")
+      val res: Either[UserError, String] = Right("true")
       marshalResponse(res.pure[F])
     }
 
-    def gameErrorToHttpResponse(error: UserDAOError): F[Response[F]] =
+    def UserErrorToHttpResponse(error: UserError): F[Response[F]] = //switch to SupplierPortalError
       error match {
         case e => BadRequest(e.message)
       }
 
     def marshalResponse[T](
-      result: F[Either[UserDAOError, T]]
+      result: F[Either[UserError, T]] //switch to SupplierPortalError
     )(
       implicit E: EntityEncoder[F, T]
     ): F[Response[F]] =
       result
         .flatMap {
-          case Left(error) => gameErrorToHttpResponse(error)
+          case Left(error) => UserErrorToHttpResponse(error)
           case Right(dto)  => Ok(dto)
         }
         .handleErrorWith { ex =>

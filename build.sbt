@@ -55,6 +55,7 @@ libraryDependencies ++= Seq(
   "org.tpolecat"             %% "doobie-core"                   % doobieVersion,
   "org.tpolecat"             %% "doobie-h2"                     % doobieVersion,
   "org.tpolecat"             %% "doobie-hikari"                 % doobieVersion,
+  "org.tpolecat"             %% "doobie-postgres"               % doobieVersion, //added
   "org.mockito"              %% "mockito-scala"                 % "1.15.0"              % Test,
   "org.scalaj"               %% "scalaj-http"                   % "2.4.2"               % Test,
   "org.tpolecat"             %% "doobie-scalatest"              % doobieVersion         % Test,
