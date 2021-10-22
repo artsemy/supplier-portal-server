@@ -6,9 +6,9 @@ import com.internship.error.UserError
 import com.internship.service.impl.UserServiceImpl
 
 trait UserService[F[_]] {
-  def logIn(login: String, password: String): F[Either[UserError, Boolean]]
-  def logOut(): F[Boolean]
-  def getRole(id: Long): F[Either[UserError, String]]
+  def logIn(login:        String, password: String): F[Either[UserError, Boolean]]
+  def logOut(tokenExists: Boolean): F[Either[UserError, String]]
+  def getRole(id:         Long): F[Either[UserError, String]]
 }
 
 object UserService {

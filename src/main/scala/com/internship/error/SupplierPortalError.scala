@@ -1,5 +1,7 @@
 package com.internship.error
 
-trait SupplierPortalError {
+trait SupplierPortalError extends Throwable {
   def message: String
 }
+
+object SupplierPortalError {}

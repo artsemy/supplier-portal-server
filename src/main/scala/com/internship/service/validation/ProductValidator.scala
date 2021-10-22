@@ -2,13 +2,14 @@ package com.internship.service.validation
 
 import com.internship.router.dto.ProductDto
 import com.internship.domain.{Product, ProductStatus}
+import com.internship.error.ProductError
 
 import java.time.LocalDate
 import scala.util.Try
 
 object ProductValidator {
 
-  trait ProductValidationError extends Throwable { //SupplierPortalError
+  trait ProductValidationError extends ProductError { //SupplierPortalError
     def message: String
   }
 

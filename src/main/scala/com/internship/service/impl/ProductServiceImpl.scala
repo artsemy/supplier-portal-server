@@ -20,18 +20,18 @@ class ProductServiceImpl[F[_]: Monad](productDAO: ProductDAO[F]) extends Product
           res <- productDAO.create(product)
         } yield res
       }
-      .map(_.left.map(_ => InvalidProductDto(productDto))) //remove, error hierarchy
   }
 
   override def read(productId: String): F[Either[ProductError, ProductDto]] = {
-    ProductValidator
-      .validateProductId(productId)
-      .traverse { id =>
-        for {
-          res <- productDAO.read(id)
-        } yield res
-      }
-      .map(_.left.map(_ => InvalidProductId(productId))) //remove
+//    ProductValidator
+//      .validateProductId(productId)
+//      .traverse { id =>
+//        for {
+//          res <- productDAO.read(id)
+//        } yield res
+//      }
+//      .map(_.left.map(_ => InvalidProductId(productId))) //remove
+    ???
   }
 
   override def update(productDto: ProductDto): F[Either[ProductError, Int]] = { //fix, add id field

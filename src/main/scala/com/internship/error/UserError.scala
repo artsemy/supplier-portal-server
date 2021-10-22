@@ -12,4 +12,8 @@ object UserError {
     override def message: String = s"user with login: $login not found"
   }
 
+  final case class UserCantLogOut() extends UserError {
+    override def message: String = "can't logout"
+  }
+
 }
