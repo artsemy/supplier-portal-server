@@ -18,7 +18,9 @@ object ProductRoutes {
     def create(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ GET -> Root / "portal" / "product" / "create" =>
       val res = for {
         productDto <- req.as[ProductDto]
-        answ       <- productService.create(productDto)
+        //validate input
+        //check role
+        answ <- productService.create(productDto)
       } yield answ
       marshalResponse(res)
     }
