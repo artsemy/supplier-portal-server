@@ -2,12 +2,13 @@ package com.internship.dao
 
 import cats.effect.Sync
 import com.internship.dao.impl.DoobieUserDAO
-import com.internship.domain.Role
+import com.internship.domain.{Role, User}
 import doobie.util.transactor.Transactor
 
 trait UserDAO[F[_]] {
   def getPass(login: String): F[Option[String]]
-  def getRole(id:    Long):   F[Option[Role]]
+  def getRole(id:    Long): F[Option[Role]]
+  def getUser(login: String, password: String): F[Option[User]]
 }
 
 object UserDAO {

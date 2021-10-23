@@ -2,7 +2,7 @@ package com.internship.router
 
 import cats.effect.Sync
 import cats.implicits._
-import com.internship.router.dto.AuthDto
+import com.internship.domain.dto.AuthDto
 import com.internship.service.UserService
 import org.http4s.{EntityEncoder, Header, HttpRoutes}
 import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
@@ -17,15 +17,16 @@ object UserRoutes {
     val dsl = new Http4sDsl[F] {}
     import dsl._
 
-    def logIn(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ GET -> Root / "portal" / "logIn" =>
-      val res = for {
-        auth <- req.as[AuthDto]
-        answ <- userService.logIn(auth.login, auth.password) //add header
-      } yield answ
-      marshalResponse(res)
-    }
-
     val LOGIN_HEADER = "loginToken"
+
+    def logIn(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ GET -> Root / "portal" / "logIn" =>
+      for {
+        auth  <- req.as[AuthDto]
+        answ   = userService.logIn(auth)
+        token <- userService.generateToken(auth)
+        res   <- marshalResponse(answ).map(x => x.putHeaders(Header(LOGIN_HEADER, token)))
+      } yield res
+    }
 
     def logOut(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ GET -> Root / "portal" / "logOut" =>
       val res = for {

@@ -2,7 +2,7 @@ package com.internship.service.impl
 
 import cats.Monad
 import cats.implicits._
-import com.internship.router.dto.ProductDto
+import com.internship.domain.dto.ProductDto
 import com.internship.service.ProductService
 import com.internship.dao.ProductDAO
 import com.internship.domain.Product

@@ -1,7 +1,7 @@
 package com.internship.service
 
 import cats.effect.Sync
-import com.internship.router.dto.ProductDto
+import com.internship.domain.dto.ProductDto
 import com.internship.service.impl.ProductServiceImpl
 import com.internship.dao.ProductDAO
 import com.internship.error.ProductError

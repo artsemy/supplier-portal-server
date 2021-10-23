@@ -13,7 +13,6 @@ object implicits {
       case "CLIENT"  => Role.Client
       case "MANAGER" => Role.Manager
       case "COURIER" => Role.Courier
-//      case _ => Role.Client //should we check that?
     }
   }
 
@@ -25,7 +24,6 @@ object implicits {
       case "IN_PROCESSING" => ProductStatus.InProcessing
       case "AVAILABLE"     => ProductStatus.Available
       case "NOT_AVAILABLE" => ProductStatus.NotAvailable
-      //      case _ => ProductStatus.InProcessing //should we check that?
     }
   }
 

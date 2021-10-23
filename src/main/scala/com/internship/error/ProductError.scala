@@ -1,6 +1,6 @@
 package com.internship.error
 
-import com.internship.router.dto.ProductDto
+import com.internship.domain.dto.ProductDto
 
 trait ProductError extends SupplierPortalError
 

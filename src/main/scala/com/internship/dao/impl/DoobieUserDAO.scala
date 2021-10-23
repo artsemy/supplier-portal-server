@@ -3,7 +3,7 @@ package com.internship.dao.impl
 import cats.Functor
 import cats.effect.Bracket
 import com.internship.dao.UserDAO
-import com.internship.domain.Role
+import com.internship.domain.{Role, User}
 import com.internship.dao.impl.meta.implicits._
 import doobie.implicits._
 import doobie.util.transactor.Transactor
@@ -24,4 +24,11 @@ class DoobieUserDAO[F[_]: Functor: Bracket[*[_], Throwable]](tx: Transactor[F]) 
       .transact(tx)
   }
 
+  override def getUser(login: String, password: String): F[Option[User]] = {
+    val fr = fr"select * from users where login = $login and password = $password"
+    fr.query[(Long, User)]
+      .map { case (_, user) => user }
+      .option
+      .transact(tx)
+  }
 }

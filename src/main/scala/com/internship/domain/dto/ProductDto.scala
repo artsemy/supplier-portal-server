@@ -1,4 +1,4 @@
-package com.internship.router.dto
+package com.internship.domain.dto
 
 import io.circe.generic.JsonCodec
 

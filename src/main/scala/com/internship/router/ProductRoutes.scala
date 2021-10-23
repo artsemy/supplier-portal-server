@@ -3,7 +3,7 @@ package com.internship.router
 import cats.effect.Sync
 import cats.implicits._
 import com.internship.router.MarshalResponse.marshalResponse
-import com.internship.router.dto.ProductDto
+import com.internship.domain.dto.ProductDto
 import com.internship.service.ProductService
 import org.http4s.HttpRoutes
 import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}

@@ -1,6 +1,6 @@
 package com.internship.service.validation
 
-import com.internship.router.dto.ProductDto
+import com.internship.domain.dto.ProductDto
 import com.internship.domain.{Product, ProductStatus}
 import com.internship.error.ProductError
 

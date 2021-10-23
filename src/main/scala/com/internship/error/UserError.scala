@@ -16,4 +16,8 @@ object UserError {
     override def message: String = "can't logout"
   }
 
+  final case class UserNotFound() extends UserError {
+    override def message: String = "can't find user with such login and password"
+  }
+
 }
