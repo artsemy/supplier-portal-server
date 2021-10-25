@@ -2,7 +2,7 @@ package com.internship.dao.impl.meta
 
 import com.internship.domain.{ProductStatus, Role}
 import com.internship.util.CaseConversionUtil._
-import doobie._
+import doobie.Meta
 
 object implicits {
 
@@ -17,14 +17,16 @@ object implicits {
   }
 
   implicit val productStatusMeta: Meta[ProductStatus] =
-    Meta[String].timap(stringToProductStatus)(x => camelToSnake(x.toString).toUpperCase())
+    Meta[String].timap(s => ProductStatus.withNameInsensitive(snakeToCamel(s.toLowerCase)))(x =>
+      normalizedSnakeCase(x.toString)
+    )
 
-  private def stringToProductStatus(s: String): ProductStatus = {
-    s match {
-      case "IN_PROCESSING" => ProductStatus.InProcessing
-      case "AVAILABLE"     => ProductStatus.Available
-      case "NOT_AVAILABLE" => ProductStatus.NotAvailable
-    }
+  def normalizedSnakeCase(str: String): String = {
+    val firstChar      = str.charAt(0).toLower
+    val remainingChars = str.substring(1)
+    val pureCamelCase  = s"$firstChar$remainingChars"
+
+    camelToSnake(pureCamelCase).toUpperCase
   }
 
 }

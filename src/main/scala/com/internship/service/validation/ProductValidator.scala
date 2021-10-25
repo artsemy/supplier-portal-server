@@ -1,6 +1,6 @@
 package com.internship.service.validation
 
-import com.internship.domain.dto.ProductDto
+import com.internship.dto.ProductDto
 import com.internship.domain.{Product, ProductStatus}
 import com.internship.error.ProductError
 
@@ -9,9 +9,7 @@ import scala.util.Try
 
 object ProductValidator {
 
-  trait ProductValidationError extends ProductError { //SupplierPortalError
-    def message: String
-  }
+  trait ProductValidationError extends ProductError {}
 
   object ProductValidationError {
 
@@ -54,7 +52,7 @@ object ProductValidator {
   } yield Product(name, publicationDate, updateDate, description, price, supplierId, productStatus)
 
   private def validateName(name: String): Either[ProductValidationError, String] = {
-    if (name.matches("[A-Z][a-z\\s]{2,10}"))
+    if (name.matches("[A-Z][a-z]{2,10}"))
       Right(name)
     else
       Left(ProductNameFormat)
@@ -69,7 +67,7 @@ object ProductValidator {
   }
 
   private def validateDescription(description: String): Either[ProductValidationError, String] = {
-    if (description.matches("[A-Z][a-z\\s]{2,10}"))
+    if (description.matches("[A-Z][a-z]{2,10}"))
       Right(description)
     else
       Left(ProductNameFormat)
@@ -88,10 +86,10 @@ object ProductValidator {
 
   private def validateProductStatus(productStatus: String): Either[ProductValidationError, ProductStatus] = {
     productStatus match {
-      case "InProcessing" => Right(ProductStatus.InProcessing)
-      case "Available"    => Right(ProductStatus.Available)
-      case "NotAvailable" => Right(ProductStatus.NotAvailable)
-      case _              => Left(ProductStatusFormat)
+      case "IN_PROCESSING" => Right(ProductStatus.InProcessing)
+      case "AVAILABLE"     => Right(ProductStatus.Available)
+      case "NOT_AVAILABLE" => Right(ProductStatus.NotAvailable)
+      case _               => Left(ProductStatusFormat)
     }
   }
 

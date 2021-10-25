@@ -2,8 +2,8 @@ package com.internship.router
 
 import cats.effect.Sync
 import cats.implicits._
-import org.http4s.{EntityEncoder, Header, Response}
-import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
+import org.http4s.{EntityEncoder, Response}
+import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
 import org.http4s.dsl.Http4sDsl
 import com.internship.error.SupplierPortalError
 

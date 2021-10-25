@@ -1,4 +1,4 @@
-package com.internship.domain.dto
+package com.internship.dto
 
 import com.internship.domain.User
 import io.circe.generic.JsonCodec
