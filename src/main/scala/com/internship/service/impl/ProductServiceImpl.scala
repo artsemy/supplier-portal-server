@@ -78,17 +78,47 @@ class ProductServiceImpl[F[_]: Monad](productDAO: ProductDAO[F]) extends Product
   }
 
   override def readAll(userTokenDto: UserTokenDto): F[Either[ProductError, Map[Long, ProductDto]]] = {
-    val resMap       = productDAO.readAll()
-    val convertedMap = resMap.map(x => x.map { case (l, product) => (l, convertProductToDto(product)) })
+    val initMap      = productDAO.readAll()
+    val convertedMap = initMap.map(x => x.map { case (l, product) => (l, convertProductToDto(product)) })
     val res: F[Either[ProductError, Map[Long, ProductDto]]] = convertedMap.map(x => Right(x))
     res
+  }
+
+  override def searchBy(
+    criteriaType:  String,
+    criteriaValue: String,
+    userTokenDto:  UserTokenDto
+  ): F[Either[ProductError, Map[Long, ProductDto]]] = {
+    if (userTokenDto.role == Role.Manager.toString) { //change role
+      ProductValidator
+        .validateCriteriaType(criteriaType)
+        .traverse(criteriaNumber => {
+          val initMap    = productDAO.readAll()
+          val convertMap = initMap.map(x => x.map { case (l, product) => (l, convertProductToDto(product)) })
+          val searchMap = criteriaNumber match {
+            case 1 => convertMap.map(x => x.filter { case (l, dto) => dto.name.contains(criteriaValue) })
+            case 2 =>
+              convertMap.map(x => x.filter { case (l, dto) => dto.publicationDate.contains(criteriaValue) })
+            case 3 =>
+              convertMap.map(x => x.filter { case (l, dto) => dto.updateDate.contains(criteriaValue) })
+            case 4 => convertMap.map(x => x.filter { case (l, dto) => dto.description.contains(criteriaValue) })
+            case 5 => convertMap.map(x => x.filter { case (l, dto) => dto.price.contains(criteriaValue) })
+            case 6 => convertMap.map(x => x.filter { case (l, dto) => dto.supplierId.contains(criteriaValue) })
+            case 7 => convertMap.map(x => x.filter { case (l, dto) => dto.productStatus.contains(criteriaValue) })
+          }
+          searchMap
+        })
+    } else {
+      val roleError: Either[ProductError, Map[Long, ProductDto]] = Left(RoleNotMatch())
+      roleError.pure[F]
+    }
   }
 
   private def convertProductToDto(product: Product): ProductDto = {
     ProductDto(
       product.name,
       product.publicationDate.toString,
-      product.updateDAte.toString,
+      product.updateDate.toString,
       product.description,
       product.price,
       product.supplierId.toString,

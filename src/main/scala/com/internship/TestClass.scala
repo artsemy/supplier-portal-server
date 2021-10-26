@@ -22,6 +22,5 @@ object TestClass {
 //    // res2: util.Try[(String, String, String)] = Failure(
 //    //   exception = pdi.jwt.exceptions.JwtValidationException: Invalid signature for this token or wrong algorithm.
 //    // )
-    println(ProductStatus.withNameInsensitive(snakeToCamel("NOT_AVAILABLE".toLowerCase)))
   }
 }

@@ -37,6 +37,10 @@ object ProductValidator {
       override def message: String = "product id format"
     }
 
+    final case object ProductCriteriaFormat extends ProductValidationError {
+      override def message: String = "product criteria format"
+    }
+
   }
 
   import ProductValidationError._
@@ -95,6 +99,19 @@ object ProductValidator {
 
   def validateProductId(productId: String): Either[ProductValidationError, Long] = {
     Try(productId.toLong).toEither.left.map(_ => ProductIdFormat)
+  }
+
+  def validateCriteriaType(criteriaType: String): Either[ProductValidationError, Int] = {
+    criteriaType match {
+      case "name"             => Right(1)
+      case "publication_date" => Right(2)
+      case "update_date"      => Right(3)
+      case "description"      => Right(4)
+      case "price"            => Right(5)
+      case "supplier_id"      => Right(6)
+      case "product_status"   => Right(7)
+      case _                  => Left(ProductCriteriaFormat)
+    }
   }
 
 }
