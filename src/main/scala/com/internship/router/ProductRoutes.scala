@@ -52,13 +52,21 @@ object ProductRoutes {
       marshalResponse(res)
     }
 
+    def readAll(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ GET -> Root / "portal" / "product" / "read_all" =>
+      val res = for {
+        token <- getToken(req)
+        read  <- productService.readAll(token)
+      } yield read
+      marshalResponse(res)
+    }
+
     def getToken(req: Request[F]): F[UserTokenDto] = for {
       jsonToken    <- req.headers.get(CaseInsensitiveString(LOGIN_HEADER_TOKEN)).get.value.pure[F]
       userTokenDto <- userService.decodeToken(jsonToken)
       token         = userTokenDto.getOrElse(UserTokenDto())
     } yield token
 
-    create() <+> read() <+> update() <+> delete()
+    create() <+> read() <+> update() <+> delete() <+> readAll()
   }
 
 }

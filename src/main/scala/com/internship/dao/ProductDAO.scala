@@ -11,6 +11,7 @@ trait ProductDAO[F[_]] {
   def read(productId:   Long): F[Option[Product]]
   def update(productId: Long, product: Product): F[Int]
   def delete(productId: Long):    F[Int]
+  def readAll(): F[Map[Long, Product]]
 
 }
 

@@ -53,4 +53,10 @@ class DoobieProductDAO[F[_]: Functor: Bracket[*[_], Throwable]](tx: Transactor[F
     fr.update.run.transact(tx)
   }
 
+  override def readAll(): F[Map[Long, Product]] = {
+    val fr = fr"select * from product" //add where
+    fr.query[(Long, Product)]
+      .toMap
+      .transact(tx)
+  }
 }

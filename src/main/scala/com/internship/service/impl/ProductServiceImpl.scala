@@ -10,6 +10,8 @@ import com.internship.error.ProductError
 import com.internship.error.ProductError._
 import com.internship.service.validation.ProductValidator
 
+import scala.collection.immutable.{AbstractMap, SeqMap, SortedMap}
+
 class ProductServiceImpl[F[_]: Monad](productDAO: ProductDAO[F]) extends ProductService[F] {
 
   override def create(productDto: ProductDto, userTokenDto: UserTokenDto): F[Either[ProductError, Int]] = {
@@ -75,6 +77,13 @@ class ProductServiceImpl[F[_]: Monad](productDAO: ProductDAO[F]) extends Product
     }
   }
 
+  override def readAll(userTokenDto: UserTokenDto): F[Either[ProductError, Map[Long, ProductDto]]] = {
+    val resMap       = productDAO.readAll()
+    val convertedMap = resMap.map(x => x.map { case (l, product) => (l, convertProductToDto(product)) })
+    val res: F[Either[ProductError, Map[Long, ProductDto]]] = convertedMap.map(x => Right(x))
+    res
+  }
+
   private def convertProductToDto(product: Product): ProductDto = {
     ProductDto(
       product.name,
@@ -83,7 +92,7 @@ class ProductServiceImpl[F[_]: Monad](productDAO: ProductDAO[F]) extends Product
       product.description,
       product.price,
       product.supplierId.toString,
-      product.productStatus.toString.toUpperCase
+      product.productStatus.toString
     )
   }
 

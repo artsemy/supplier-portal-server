@@ -6,15 +6,8 @@ import doobie.Meta
 
 object implicits {
 
-  implicit val roleMeta: Meta[Role] = Meta[String].timap(stringToRole)(_.toString.toUpperCase)
-
-  private def stringToRole(s: String): Role = {
-    s match {
-      case "CLIENT"  => Role.Client
-      case "MANAGER" => Role.Manager
-      case "COURIER" => Role.Courier
-    }
-  }
+  implicit val roleMeta: Meta[Role] =
+    Meta[String].timap(s => Role.withNameInsensitive(snakeToCamel(s.toLowerCase)))(x => normalizedSnakeCase(x.toString))
 
   implicit val productStatusMeta: Meta[ProductStatus] =
     Meta[String].timap(s => ProductStatus.withNameInsensitive(snakeToCamel(s.toLowerCase)))(x =>

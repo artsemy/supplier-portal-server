@@ -1,6 +1,7 @@
 package com.internship
 
 import com.internship.domain.ProductStatus
+import com.internship.util.CaseConversionUtil.snakeToCamel
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim, JwtHeader, JwtOptions}
 
 object TestClass {
@@ -21,6 +22,6 @@ object TestClass {
 //    // res2: util.Try[(String, String, String)] = Failure(
 //    //   exception = pdi.jwt.exceptions.JwtValidationException: Invalid signature for this token or wrong algorithm.
 //    // )
-
+    println(ProductStatus.withNameInsensitive(snakeToCamel("NOT_AVAILABLE".toLowerCase)))
   }
 }
