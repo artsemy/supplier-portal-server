@@ -3,12 +3,18 @@ package com.internship.router
 import cats.effect.Sync
 import cats.implicits._
 import com.internship.router.MarshalResponse.marshalResponse
-import com.internship.dto.{ProductDto, UserTokenDto}
+import com.internship.dto.{ProductDto, SearchDto, UserTokenDto}
 import com.internship.service.{ProductService, UserService}
 import org.http4s.{HttpRoutes, Request}
 import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
 import org.http4s.dsl.Http4sDsl
 import org.http4s.util.CaseInsensitiveString
+
+import io.circe.generic.auto._
+import io.circe._
+import io.circe.generic.JsonCodec
+import io.circe.parser._
+import io.circe.syntax._
 
 object ProductRoutes {
 
@@ -69,13 +75,22 @@ object ProductRoutes {
         marshalResponse(res)
     }
 
+    def search(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ GET -> Root / "portal" / "product" / "search" =>
+      val res = for {
+        token     <- getToken(req)
+        searchDto <- req.as[SearchDto]
+        search    <- productService.search(searchDto)
+      } yield search
+      marshalResponse(res)
+    }
+
     def getToken(req: Request[F]): F[UserTokenDto] = for {
       jsonToken    <- req.headers.get(CaseInsensitiveString(LOGIN_HEADER_TOKEN)).get.value.pure[F]
       userTokenDto <- userService.decodeToken(jsonToken)
       token         = userTokenDto.getOrElse(UserTokenDto())
     } yield token
 
-    create() <+> read() <+> update() <+> delete() <+> readAll() <+> searchBy()
+    create() <+> read() <+> update() <+> delete() <+> readAll() <+> searchBy() <+> search()
   }
 
 }

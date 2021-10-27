@@ -1,7 +1,7 @@
 package com.internship.service
 
 import cats.effect.Sync
-import com.internship.dto.{ProductDto, UserTokenDto}
+import com.internship.dto.{ProductDto, SearchDto, UserTokenDto}
 import com.internship.service.impl.ProductServiceImpl
 import com.internship.dao.ProductDAO
 import com.internship.error.ProductError
@@ -18,6 +18,8 @@ trait ProductService[F[_]] {
     criteriaValue: String,
     userTokenDto:  UserTokenDto
   ): F[Either[ProductError, Map[Long, ProductDto]]]
+
+  def search(searchDto: SearchDto): F[Either[ProductError, Map[Long, ProductDto]]]
 }
 
 object ProductService {

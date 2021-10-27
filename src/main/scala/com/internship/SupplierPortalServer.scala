@@ -31,7 +31,7 @@ object SupplierPortalServer extends IOApp {
 
 /*
 //login & logout
-curl -XGET "localhost:9000/portal/logIn" -H "Content-Type: application/json" -d "{\"login\": \"arty5\", \"password\": \"1234\"}"
+curl -XGET "localhost:9000/portal/logIn" -H "Content-Type: application/json" -d "{\"login\": \"arty5\", \"password\": \"123\"}"
 curl "localhost:9000/portal/logOut" -H "loginToken: $token$"
 
 //token arty5 - manager
@@ -47,6 +47,7 @@ readAll
 curl "localhost:9000/portal/product/read_all" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI"
 searchBy
 curl "localhost:9000/portal/product/search/name/PC" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI"
-curl "localhost:9000/portal/product/search/supplier_id/5" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI"
-
+curl "localhost:9000/portal/product/search/supplier_id/2" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI"
+search
+curl -XGET "localhost:9000/portal/product/search" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI" -H "Content-Type: application/json" -d "{\"exact\":[{\"typ\":\"name\",\"value\":\"PC\"},{\"typ\":\"description\",\"value\":\"fast\"}],\"period\":[{\"typ\":\"publication_date\",\"start\":\"2020-10-10\",\"end\":\"2022-10-10\"},{\"typ\":\"update_date\",\"start\":\"2020-10-10\",\"end\":\"2022-10-10\"}],\"category\":[1, 2]}"
  */

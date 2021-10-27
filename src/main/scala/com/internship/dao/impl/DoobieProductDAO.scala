@@ -5,7 +5,6 @@ import cats.effect.Bracket
 import com.internship.dao.ProductDAO
 import com.internship.domain.Product
 import doobie.util.transactor.Transactor
-
 import com.internship.dao.impl.meta.implicits._
 import doobie.implicits._
 import doobie.implicits.javasql._
@@ -13,6 +12,7 @@ import doobie.implicits.javatime._
 import doobie.postgres._
 import doobie.postgres.implicits._
 import doobie.postgres.pgisimplicits._
+import doobie.util.fragment.Fragment
 
 class DoobieProductDAO[F[_]: Functor: Bracket[*[_], Throwable]](tx: Transactor[F]) extends ProductDAO[F] {
 
@@ -62,6 +62,14 @@ class DoobieProductDAO[F[_]: Functor: Bracket[*[_], Throwable]](tx: Transactor[F
 
   override def readAll(): F[Map[Long, Product]] = {
     val fr = selectFullProduct
+    fr.query[(Long, Product)]
+      .toMap
+      .transact(tx)
+  }
+
+  override def search(searchLine: String): F[Map[Long, Product]] = {
+    val fr = fr"select p.id, name, publication_date, update_date, description, price, supplier_id, product_status " ++
+      fr"from product p JOIN product_category c ON p.id = c.product_id WHERE " ++ Fragment.const(searchLine)
     fr.query[(Long, Product)]
       .toMap
       .transact(tx)

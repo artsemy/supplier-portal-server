@@ -2,12 +2,13 @@ package com.internship.service.impl
 
 import cats.Monad
 import cats.implicits._
-import com.internship.dto.{ProductDto, UserTokenDto}
+import com.internship.dto.{ProductDto, SearchDto, UserTokenDto}
 import com.internship.service.ProductService
 import com.internship.dao.ProductDAO
 import com.internship.domain.{Product, Role}
 import com.internship.error.ProductError
 import com.internship.error.ProductError._
+import com.internship.service.search.SearchParsing
 import com.internship.service.validation.ProductValidator
 
 import scala.collection.immutable.{AbstractMap, SeqMap, SortedMap}
@@ -111,6 +112,14 @@ class ProductServiceImpl[F[_]: Monad](productDAO: ProductDAO[F]) extends Product
     } else {
       val roleError: Either[ProductError, Map[Long, ProductDto]] = Left(RoleNotMatch())
       roleError.pure[F]
+    }
+  }
+
+  override def search(searchDto: SearchDto): F[Either[ProductError, Map[Long, ProductDto]]] = {
+    val line: Either[ProductError, String] = Right(SearchParsing.parse(searchDto))
+    line.traverse { l =>
+      val r = productDAO.search(l)
+      r.map(x => x.map { case (l, product) => (l, convertProductToDto(product)) })
     }
   }
 

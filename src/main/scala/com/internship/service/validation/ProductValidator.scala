@@ -41,6 +41,10 @@ object ProductValidator {
       override def message: String = "product criteria format"
     }
 
+    final case class ProductSomeValidationError(error: String) extends ProductValidationError {
+      override def message: String = s"er: $error"
+    }
+
   }
 
   import ProductValidationError._
