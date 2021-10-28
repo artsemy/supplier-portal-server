@@ -1,6 +1,6 @@
 package com.internship.dao.impl.meta
 
-import com.internship.domain.{ProductStatus, Role}
+import com.internship.domain.{OrderStatus, ProductStatus, Role}
 import com.internship.util.CaseConversionUtil._
 import doobie.Meta
 
@@ -11,6 +11,11 @@ object implicits {
 
   implicit val productStatusMeta: Meta[ProductStatus] =
     Meta[String].timap(s => ProductStatus.withNameInsensitive(snakeToCamel(s.toLowerCase)))(x =>
+      normalizedSnakeCase(x.toString)
+    )
+
+  implicit val orderStatusMeta: Meta[OrderStatus] =
+    Meta[String].timap(s => OrderStatus.withNameInsensitive(snakeToCamel(s.toLowerCase)))(x =>
       normalizedSnakeCase(x.toString)
     )
 

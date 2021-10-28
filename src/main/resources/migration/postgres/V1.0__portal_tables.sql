@@ -103,6 +103,7 @@ CREATE TABLE IF NOT EXISTS orders_product (
     id SERIAL,
     orders_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
+    amount INT NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT orders_fk FOREIGN KEY (orders_id) REFERENCES orders(id),
     CONSTRAINT product_fk FOREIGN KEY (product_id) REFERENCES product(id)

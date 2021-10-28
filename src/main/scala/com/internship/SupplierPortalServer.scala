@@ -31,10 +31,10 @@ object SupplierPortalServer extends IOApp {
 
 /*
 //login & logout
-curl -XGET "localhost:9000/portal/logIn" -H "Content-Type: application/json" -d "{\"login\": \"arty5\", \"password\": \"123\"}"
+curl -XGET "localhost:9000/portal/logIn" -H "Content-Type: application/json" -d "{\"login\": \"arty1\", \"password\": \"1234\"}"
 curl "localhost:9000/portal/logOut" -H "loginToken: $token$"
 
-//token arty5 - manager
+//token arty5 - manager //product
 create
 curl -XPOST "localhost:9000/portal/product/create" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI" -H "Content-Type: application/json" -d "{\"name\": \"Pccc\", \"publicationDate\": \"2010-10-10\", \"updateDate\": \"2010-10-10\", \"description\": \"Descr\", \"price\": \"123.00\", \"supplierId\": \"2\", \"productStatus\": \"AVAILABLE\"}"
 read one by id
@@ -50,4 +50,26 @@ curl "localhost:9000/portal/product/search/name/PC" -H "loginToken: eyJ0eXAiOiJK
 curl "localhost:9000/portal/product/search/supplier_id/2" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI"
 search
 curl -XGET "localhost:9000/portal/product/search" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI" -H "Content-Type: application/json" -d "{\"exact\":[{\"typ\":\"name\",\"value\":\"PC\"},{\"typ\":\"description\",\"value\":\"fast\"}],\"period\":[{\"typ\":\"publication_date\",\"start\":\"2020-10-10\",\"end\":\"2022-10-10\"},{\"typ\":\"update_date\",\"start\":\"2020-10-10\",\"end\":\"2022-10-10\"}],\"category\":[1, 2]}"
+---------------------------------------------------------------------------
+//order token user1(CLIENT): eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHkxIiwicm9sZSI6IkNsaWVudCJ9.qFO-jV5m-866TDwe-qTkIjQ8uTLjy_6_8IlDwFHVVNw
+create
+curl -XPOST "localhost:9000/portal/order/create" -H "Content-Type: application/json" -d "{\"ownerId\": \"5\", \"courierId\": \"0\", \"orderStatus\": \"InProcessing\", \"address\": \"address5\"}"
+read
+curl "localhost:9000/portal/order/read/5"
+update
+curl -XPOST "localhost:9000/portal/order/update/7" -H "Content-Type: application/json" -d "{\"ownerId\": \"5\", \"courierId\": \"6\", \"orderStatus\": \"Assigned\", \"address\": \"address5\"}"
+delete
+curl -XPOST "localhost:9000/portal/order/delete/5"
+
+addProduct
+curl -XPOST "localhost:9000/portal/order/add_product/4/5/10"
+updateProductAmount
+curl -XPOST "localhost:9000/portal/order/update_amount/6/100"
+readAllProductInOrder
+curl "localhost:9000/portal/order/all_product/4"
+removeProduct
+curl -XPOST "localhost:9000/portal/order/remove_product/4/5"
+changeStatus
+curl -XPOST "localhost:9000/portal/order/set_status/3/delivered" -H "Content-Type: application/json" -d "{\"ownerId\": \"3\", \"courierId\": \"6\", \"orderStatus\": \"assigned\", \"address\": \"address3\"}"
+-------------------------------------------------------------------------------
  */
