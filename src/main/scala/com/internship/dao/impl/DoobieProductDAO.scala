@@ -6,6 +6,7 @@ import com.internship.dao.ProductDAO
 import com.internship.domain.Product
 import doobie.util.transactor.Transactor
 import com.internship.dao.impl.meta.implicits._
+import com.internship.dto.SmartSearchDto
 import doobie.implicits._
 import doobie.implicits.javasql._
 import doobie.implicits.javatime._
@@ -73,6 +74,44 @@ class DoobieProductDAO[F[_]: Functor: Bracket[*[_], Throwable]](tx: Transactor[F
     fr.query[(Long, Product)]
       .toMap
       .transact(tx)
+  }
+
+  override def smartSearch(smartSearchDto: SmartSearchDto): F[Map[Long, Product]] = {
+    val line = buildLine(smartSearchDto)
+    val fr = fr"select p.id, name ,publication_date, update_date, description, price, supplier_id, product_status " ++
+      fr"from product p JOIN product_category c ON p.id = c.product_id WHERE " ++ Fragment.const(line)
+    fr.query[(Long, Product)]
+      .toMap
+      .transact(tx)
+  }
+
+  //careful column name because of JOIN
+  private def buildLine(dto: SmartSearchDto): String = {
+    List(
+      exactSearchLine("name", dto.name),
+      exactSearchLine("publication_date", dto.pubDate),
+      exactSearchLine("update_date", dto.upDate),
+      exactSearchLine("description", dto.description),
+      exactSearchLine("price", dto.price),
+      exactSearchLine("supplier_id", dto.supplierId),
+      exactSearchLine("product_status", dto.productStatus),
+      periodSearchLine("publication_date", dto.pubDatePeriod),
+      periodSearchLine("update_date", dto.upDatePeriod),
+      inArraySearchLine("category_id", dto.listCategoryId)
+    ).filter(x => x != "").reduce(_ + " AND " + _)
+  }
+
+  def exactSearchLine(columnName: String, value: Option[String]): String = {
+    value.map(x => s"$columnName LIKE '%$x%'").getOrElse("")
+  }
+
+  def periodSearchLine(columnName: String, value: Option[(String, String)]): String = {
+    value.map { case (st, end) => s"$columnName BETWEEN '$st' AND '$end'" }.getOrElse("")
+  }
+
+  def inArraySearchLine(columnName: String, arr: Option[List[Int]]): String = {
+    val l1 = arr.map(x => x.map(_.toString).reduce(_ + ", " + _))
+    l1.map(x => s"$columnName IN ($x)").getOrElse("")
   }
 
 }

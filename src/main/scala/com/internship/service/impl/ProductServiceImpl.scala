@@ -2,7 +2,7 @@ package com.internship.service.impl
 
 import cats.Monad
 import cats.implicits._
-import com.internship.dto.{ProductDto, SearchDto, UserTokenDto}
+import com.internship.dto.{ProductDto, SearchDto, SmartSearchDto, UserTokenDto}
 import com.internship.service.ProductService
 import com.internship.dao.ProductDAO
 import com.internship.domain.{Product, Role}
@@ -10,8 +10,6 @@ import com.internship.error.ProductError
 import com.internship.error.ProductError._
 import com.internship.service.search.SearchParsing
 import com.internship.service.validation.ProductValidator
-
-import scala.collection.immutable.{AbstractMap, SeqMap, SortedMap}
 
 class ProductServiceImpl[F[_]: Monad](productDAO: ProductDAO[F]) extends ProductService[F] {
 
@@ -121,6 +119,15 @@ class ProductServiceImpl[F[_]: Monad](productDAO: ProductDAO[F]) extends Product
       val r = productDAO.search(l)
       r.map(x => x.map { case (l, product) => (l, convertProductToDto(product)) })
     }
+  }
+
+  override def smartSearch(smartSearchDto: SmartSearchDto): F[Either[ProductError, Map[Long, ProductDto]]] = {
+    ProductValidator
+      .validateSmartSearchDto(smartSearchDto)
+      .traverse { dto =>
+        productDAO.smartSearch(dto)
+      }
+      .map(x => x.map(y => y.map { case (l, product) => (l, convertProductToDto(product)) }))
   }
 
   private def convertProductToDto(product: Product): ProductDto = {

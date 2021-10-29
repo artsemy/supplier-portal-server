@@ -50,6 +50,8 @@ curl "localhost:9000/portal/product/search/name/PC" -H "loginToken: eyJ0eXAiOiJK
 curl "localhost:9000/portal/product/search/supplier_id/2" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI"
 search
 curl -XGET "localhost:9000/portal/product/search" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI" -H "Content-Type: application/json" -d "{\"exact\":[{\"typ\":\"name\",\"value\":\"PC\"},{\"typ\":\"description\",\"value\":\"fast\"}],\"period\":[{\"typ\":\"publication_date\",\"start\":\"2020-10-10\",\"end\":\"2022-10-10\"},{\"typ\":\"update_date\",\"start\":\"2020-10-10\",\"end\":\"2022-10-10\"}],\"category\":[1, 2]}"
+smartSearch
+curl -XGET "localhost:9000/portal/product/smart_search" -H "Content-Type: application/json" -d "{\"name\": \"PC\", \"pubDatePeriod\": [\"2010-10-10\", \"2022-10-10\"], \"listCategoryId\": [1, 2]}"
 ---------------------------------------------------------------------------
 //order token user1(CLIENT): eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHkxIiwicm9sZSI6IkNsaWVudCJ9.qFO-jV5m-866TDwe-qTkIjQ8uTLjy_6_8IlDwFHVVNw
 create

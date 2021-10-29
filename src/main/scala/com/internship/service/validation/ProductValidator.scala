@@ -1,6 +1,6 @@
 package com.internship.service.validation
 
-import com.internship.dto.ProductDto
+import com.internship.dto.{ProductDto, SmartSearchDto}
 import com.internship.domain.{Product, ProductStatus}
 import com.internship.error.ProductError
 
@@ -116,6 +116,12 @@ object ProductValidator {
       case "product_status"   => Right(7)
       case _                  => Left(ProductCriteriaFormat)
     }
+  }
+
+  def validateSmartSearchDto(smartSearchDto: SmartSearchDto): Either[ProductValidationError, SmartSearchDto] = {
+    //fix
+    val res: Either[ProductValidationError, SmartSearchDto] = Right(smartSearchDto)
+    res
   }
 
 }

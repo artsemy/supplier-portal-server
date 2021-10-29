@@ -2,6 +2,7 @@ package com.internship
 
 import com.internship.domain.ProductStatus
 import com.internship.dto.SearchDto
+import com.internship.error.ProductError
 import com.internship.service.search.SearchParsing
 import com.internship.util.CaseConversionUtil.snakeToCamel
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim, JwtHeader, JwtOptions}
@@ -9,8 +10,9 @@ import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim, JwtHeader, JwtOptions}
 object TestClass {
   def main(args: Array[String]): Unit = {
     println("Hi")
-    val l = List(1, 2, 3).map(x => x.toString).reduce(_ + ", " + _)
-    println(l)
+//    er.search()
+    val maybeString = None
+    println(maybeString.map(x => s"name LIKE '%$x%'").getOrElse(""))
   }
 }
 
@@ -71,6 +73,23 @@ object er {
       s    = SearchParsing.parse(dto)
       _    = println(s)
     } yield ()
-
   }
+
+  def search(): Unit = {
+    import io.circe.generic.auto._
+    import io.circe._
+    import io.circe.generic.JsonCodec
+    import io.circe.parser._
+    import io.circe.syntax._
+    val str =
+      """
+        |{
+        |  "name": ["Arty", "Barty", "Carty"]
+        |}
+        |""".stripMargin
+    case class Pair(name: Option[(String, String)], last: Option[String])
+    val dec: Either[Error, Pair] = decode[Pair](str)
+    println(dec)
+  }
+
 }
