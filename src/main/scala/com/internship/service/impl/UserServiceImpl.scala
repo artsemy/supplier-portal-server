@@ -2,12 +2,16 @@ package com.internship.service.impl
 
 import cats.implicits._
 import cats.Monad
+import cats.data.EitherT
 import com.internship.dao.UserDAO
 import com.internship.error.UserError
 import com.internship.error.UserError._
 import com.internship.dto.{AuthDto, UserTokenDto}
 import com.internship.service.UserService
 import com.internship.domain._
+import com.internship.service.validation.UserValidator
+import io.chrisdavenport.log4cats.Logger
+//import org.typelevel.log4cats.Logger
 import pdi.jwt.{Jwt, JwtAlgorithm}
 import io.circe._
 import io.circe.parser._
@@ -15,37 +19,51 @@ import io.circe.generic.auto._
 
 import scala.util.{Failure, Success, Try}
 
-class UserServiceImpl[F[_]: Monad](authDAO: UserDAO[F]) extends UserService[F] {
+class UserServiceImpl[F[_]: Monad: Logger](userDAO: UserDAO[F]) extends UserService[F] {
 
   val LOG_OUT_MESSAGE = "logged out"
   val LOG_IN_MESSAGE  = "logged in"
   val SECRET_WORD     = "secretWord"
+  val preString       = "-" * 100
 
   override def logIn(authDto: AuthDto): F[Either[UserError, String]] = {
-    getOptionUser(authDto).map {
-      case Some(_) => Right(LOG_IN_MESSAGE)
-      case None    => Left(UserNotFound())
-    }
+    for {
+      _       <- Logger[F].info(s"$preString service logIn: try to login")
+      message <- getOptionUser(authDto).map(op => op.toRight(UserNotFound()).map(_ => LOG_IN_MESSAGE))
+      _       <- Logger[F].info(s"$preString service logIn: answer generated")
+    } yield message
   }
 
-  override def logOut(tokenExists: Boolean): F[Either[UserError, String]] = {
-    val res: Either[UserError, String] =
-      if (tokenExists)
-        Right(LOG_OUT_MESSAGE)
-      else
-        Left(UserCantLogOut())
-    res.pure[F]
-  }
+  override def logOut(tokenExists: Boolean): F[Either[UserError, String]] = for {
+    _       <- Logger[F].info(s"$preString service logOut: try to logout")
+    message <- (if (tokenExists) Right(LOG_OUT_MESSAGE) else Left(UserCantLogOut())).pure[F]
+    _       <- Logger[F].info(s"$preString service logOut: answer generated")
+  } yield message
 
   private def getOptionUser(authDto: AuthDto): F[Option[User]] = for {
+    _       <- Logger[F].info(s"$preString service getOptionUser: try")
     pass    <- encodePass(authDto.password)
-    optUser <- authDAO.getUser(authDto.login, pass)
+    optUser <- userDAO.getUser(authDto.login, pass)
+    _       <- Logger[F].info(s"$preString service getOptionUser: done")
   } yield optUser
 
-  private def encodePass(password: String): F[String] = {
-    password.map(x => x).pure[F] //add encryption
+  private def encodePass(password: String): F[String] = for {
+    _    <- Logger[F].info(s"$preString service encodePass: try")
+    pass <- password.map(x => x).pure[F] //add encryption
+    _    <- Logger[F].info(s"$preString service encodePass: done")
+  } yield pass
+
+  override def subscribeSupplier(userId: String, supplierId: String): F[Either[UserError, Int]] = {
+//    for {
+//      _   <- Logger[F].info(s"$preString service subSupp: try")
+//      bothId = UserValidator.validateUserId(userId)
+//      sId = UserValidator.validateSupplierId(supplierId)
+//      res <-
+//    } yield ()
+    ???
   }
 
+  override def subscribeCategory(userId: String, categoryId: String): F[Either[UserError, Int]] = ???
   //token
   def generateToken(authDto: AuthDto): F[String] = for {
     optUser      <- getOptionUser(authDto)

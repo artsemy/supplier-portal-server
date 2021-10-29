@@ -9,10 +9,12 @@ import com.internship.dao.{OrderDAO, ProductDAO, UserDAO}
 import com.internship.router.{OrderRoutes, ProductRoutes, UserRoutes}
 import com.internship.service.{OrderService, ProductService, UserService}
 import cats.implicits._
+import io.chrisdavenport.log4cats.Logger
+//import org.typelevel.log4cats.Logger
 
 object AppContext {
 
-  def setUp[F[_]: ContextShift: Async](conf: AppConf): Resource[F, HttpApp[F]] = for {
+  def setUp[F[_]: ContextShift: Async: Logger](conf: AppConf): Resource[F, HttpApp[F]] = for {
     tx <- transactor[F](conf.db)
 
     migrator <- Resource.eval(migrator[F](conf.db))

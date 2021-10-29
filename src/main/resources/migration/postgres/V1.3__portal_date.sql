@@ -27,13 +27,13 @@ VALUES
 (1, 7, 1);
 
 
-INSERT INTO subscriptions_supplier(id, users_id, supplier_id)
+INSERT INTO subscriptions_supplier(users_id, supplier_id)
 VALUES
-(1, 2, 1),
-(2, 3, 2),
-(3, 4, 3);
+(2, 1),
+(3, 2),
+(4, 3);
 
-INSERT INTO subscriptions_category(id, users_id, category_id)
+INSERT INTO subscriptions_category(users_id, category_id)
 VALUES
-(1, 5, 1),
-(2, 6, 2);
+(5, 1),
+(6, 2);

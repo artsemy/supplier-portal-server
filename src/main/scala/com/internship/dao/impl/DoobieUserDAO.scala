@@ -31,4 +31,19 @@ class DoobieUserDAO[F[_]: Functor: Bracket[*[_], Throwable]](tx: Transactor[F]) 
       .option
       .transact(tx)
   }
+
+  override def subscribeSupplier(userId: Long, supplierId: Long): F[Int] = {
+    val fr = fr"insert into subscriptions_supplier (users_id, supplier_id) " ++
+      fr"values " ++
+      fr"($userId, $supplierId);"
+    fr.update.run.transact(tx)
+  }
+
+  override def subscribeCategory(userId: Long, categoryId: Long): F[Int] = {
+    val fr = fr"insert into subscriptions_category (users_id, category_id) " ++
+      fr"values " ++
+      fr"($userId, $categoryId);"
+    fr.update.run.transact(tx)
+  }
+
 }

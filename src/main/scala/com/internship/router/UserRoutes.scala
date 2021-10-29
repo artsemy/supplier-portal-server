@@ -24,8 +24,8 @@ object UserRoutes {
         auth  <- req.as[AuthDto]
         answ   = userService.logIn(auth)
         token <- userService.generateToken(auth)
-        _      = println(token)
-        res   <- marshalResponse(answ).map(x => x.putHeaders(Header(LOGIN_HEADER_TOKEN, token)))
+//        _      = println(token)
+        res <- marshalResponse(answ).map(x => x.putHeaders(Header(LOGIN_HEADER_TOKEN, token)))
       } yield res
     }
 

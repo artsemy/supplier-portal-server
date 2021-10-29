@@ -4,20 +4,25 @@ import cats.effect._
 import org.http4s.server.Server
 import org.http4s.server.blaze.BlazeServerBuilder
 import io.circe.config.parser
-
 import com.internship.conf.app._
 import com.internship.context.AppContext
+import io.chrisdavenport.log4cats.Logger
+import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
+//import org.typelevel.log4cats.Logger
+//import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import scala.concurrent.ExecutionContext
 
 object SupplierPortalServer extends IOApp {
 
-  override def run(args: List[String]): IO[ExitCode] =
+  override def run(args: List[String]): IO[ExitCode] = {
+    implicit def unsafeLogger[F[_]: Sync] = Slf4jLogger.getLogger[F]
     serverResource[IO]
       .use(_ => IO.never)
       .as(ExitCode.Success)
+  }
 
-  private def serverResource[F[_]: ContextShift: ConcurrentEffect: Timer]: Resource[F, Server[F]] = for {
+  private def serverResource[F[_]: ContextShift: ConcurrentEffect: Timer: Logger]: Resource[F, Server[F]] = for {
     conf    <- Resource.eval(parser.decodePathF[F, AppConf]("app"))
     httpApp <- AppContext.setUp[F](conf)
 
@@ -57,11 +62,11 @@ curl -XGET "localhost:9000/portal/product/smart_search" -H "Content-Type: applic
 create
 curl -XPOST "localhost:9000/portal/order/create" -H "Content-Type: application/json" -d "{\"ownerId\": \"5\", \"courierId\": \"0\", \"orderStatus\": \"InProcessing\", \"address\": \"address5\"}"
 read
-curl "localhost:9000/portal/order/read/5"
+curl "localhost:9000/portal/order/read/8"
 update
-curl -XPOST "localhost:9000/portal/order/update/7" -H "Content-Type: application/json" -d "{\"ownerId\": \"5\", \"courierId\": \"6\", \"orderStatus\": \"Assigned\", \"address\": \"address5\"}"
+curl -XPOST "localhost:9000/portal/order/update/8" -H "Content-Type: application/json" -d "{\"ownerId\": \"5\", \"courierId\": \"6\", \"orderStatus\": \"Assigned\", \"address\": \"address5\"}"
 delete
-curl -XPOST "localhost:9000/portal/order/delete/5"
+curl -XPOST "localhost:9000/portal/order/delete/8"
 
 addProduct
 curl -XPOST "localhost:9000/portal/order/add_product/4/5/10"

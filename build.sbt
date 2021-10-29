@@ -37,6 +37,7 @@ libraryDependencies ++= Seq(
   "org.http4s"               %% "http4s-blaze-client"           % http4sVersion,
   "org.http4s"               %% "http4s-circe"                  % http4sVersion,
   "org.http4s"               %% "http4s-jdk-http-client"        % "0.3.6",
+  "io.chrisdavenport"        %% "log4cats-core"                 % log4CatsVersion, //added
   "io.chrisdavenport"        %% "log4cats-slf4j"                % log4CatsVersion,
   "ch.qos.logback"            % "logback-classic"               % "1.2.3",
   "com.codecommit"           %% "cats-effect-testing-scalatest" % "0.4.1"               % Test,
@@ -74,10 +75,12 @@ libraryDependencies ++= Seq(
   "io.circe"                 %% "circe-generic-extras"          % circeVersion,
   "io.circe"                 %% "circe-optics"                  % circeVersion,
   "io.circe"                 %% "circe-parser"                  % circeVersion,
-  "io.circe"                 %% "circe-refined"                 % circeVersion, //need???
-  "org.flywaydb"              % "flyway-core"                   % "6.2.4", //migration
-  "com.github.jwt-scala"     %% "jwt-core"                      % "9.0.2", //jwt
-  "org.postgresql"            % "postgresql"                    % "42.2.6" //postgresql
+  "io.circe"                 %% "circe-refined"                 % circeVersion,
+  "org.flywaydb"              % "flyway-core"                   % "6.2.4",
+  "com.github.jwt-scala"     %% "jwt-core"                      % "9.0.2",
+  "org.postgresql"            % "postgresql"                    % "42.2.6",
+//  "org.typelevel"            %% "log4cats-core"                 % "2.1.1", // Only if you want to Support Any Backend
+//  "org.typelevel"            %% "log4cats-slf4j"                % "2.1.1" // Direct Slf4j Support - Recommended
 )
 
 addCompilerPlugin(
