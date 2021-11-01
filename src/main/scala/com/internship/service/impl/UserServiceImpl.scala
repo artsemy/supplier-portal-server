@@ -18,6 +18,7 @@ import io.circe._
 import io.circe.parser._
 import io.circe.generic.auto._
 
+import com.internship.util.TraverseEitherTupleUtil._
 import scala.util.{Failure, Success, Try}
 
 class UserServiceImpl[F[_]: Monad: Logger](userDAO: UserDAO[F]) extends UserService[F] {
@@ -59,7 +60,7 @@ class UserServiceImpl[F[_]: Monad: Logger](userDAO: UserDAO[F]) extends UserServ
       _   <- Logger[F].info(s"$preString service subSupp: try")
       uId <- UserValidator.validateUserId(userId).pure[F]
       sId <- UserValidator.validateSupplierId(supplierId).pure[F]
-      res <- trav(uId, sId).traverse { case (id1, id2) => userDAO.subscribeSupplier(id1, id2) }
+      res <- traverseTwoTypes(uId, sId).traverse { case (id1, id2) => userDAO.subscribeSupplier(id1, id2) }
       _   <- Logger[F].info(s"$preString service subSupp: done")
     } yield res
   }
@@ -69,20 +70,9 @@ class UserServiceImpl[F[_]: Monad: Logger](userDAO: UserDAO[F]) extends UserServ
       _   <- Logger[F].info(s"$preString service subCat: try")
       uId <- UserValidator.validateUserId(userId).pure[F]
       cId <- UserValidator.validateCategoryId(categoryId).pure[F]
-      res <- trav(uId, cId).traverse { case (id1, id2) => userDAO.subscribeCategory(id1, id2) }
+      res <- traverseTwoTypes(uId, cId).traverse { case (id1, id2) => userDAO.subscribeCategory(id1, id2) }
       _   <- Logger[F].info(s"$preString service subCat: done")
     } yield res
-  }
-
-  def trav(e1: Either[UserError, Long], e2: Either[UserError, Long]): Either[UserError, (Long, Long)] = {
-    e1 match {
-      case Left(value) => Left(value)
-      case Right(v1) =>
-        e2 match {
-          case Left(value) => Left(value)
-          case Right(v2)   => Right((v1, v2))
-        }
-    }
   }
 
   //token

@@ -5,6 +5,8 @@ import com.internship.dto.{ProductDto, SearchDto, SmartSearchDto, UserTokenDto}
 import com.internship.service.impl.ProductServiceImpl
 import com.internship.dao.ProductDAO
 import com.internship.error.ProductError
+import io.chrisdavenport.log4cats.Logger
+//import org.typelevel.log4cats.Logger
 
 trait ProductService[F[_]] {
 
@@ -24,5 +26,5 @@ trait ProductService[F[_]] {
 }
 
 object ProductService {
-  def of[F[_]: Sync](productDAO: ProductDAO[F]): ProductService[F] = new ProductServiceImpl[F](productDAO)
+  def of[F[_]: Sync: Logger](productDAO: ProductDAO[F]): ProductService[F] = new ProductServiceImpl[F](productDAO)
 }
