@@ -3,6 +3,7 @@ package com.internship.service.impl
 import cats.implicits._
 import cats.Monad
 import cats.data.EitherT
+import cats.implicits._
 import com.internship.dao.UserDAO
 import com.internship.error.UserError
 import com.internship.error.UserError._
@@ -54,16 +55,36 @@ class UserServiceImpl[F[_]: Monad: Logger](userDAO: UserDAO[F]) extends UserServ
   } yield pass
 
   override def subscribeSupplier(userId: String, supplierId: String): F[Either[UserError, Int]] = {
-//    for {
-//      _   <- Logger[F].info(s"$preString service subSupp: try")
-//      bothId = UserValidator.validateUserId(userId)
-//      sId = UserValidator.validateSupplierId(supplierId)
-//      res <-
-//    } yield ()
-    ???
+    for {
+      _   <- Logger[F].info(s"$preString service subSupp: try")
+      uId <- UserValidator.validateUserId(userId).pure[F]
+      sId <- UserValidator.validateSupplierId(supplierId).pure[F]
+      res <- trav(uId, sId).traverse { case (id1, id2) => userDAO.subscribeSupplier(id1, id2) }
+      _   <- Logger[F].info(s"$preString service subSupp: done")
+    } yield res
   }
 
-  override def subscribeCategory(userId: String, categoryId: String): F[Either[UserError, Int]] = ???
+  override def subscribeCategory(userId: String, categoryId: String): F[Either[UserError, Int]] = {
+    for {
+      _   <- Logger[F].info(s"$preString service subCat: try")
+      uId <- UserValidator.validateUserId(userId).pure[F]
+      cId <- UserValidator.validateCategoryId(categoryId).pure[F]
+      res <- trav(uId, cId).traverse { case (id1, id2) => userDAO.subscribeCategory(id1, id2) }
+      _   <- Logger[F].info(s"$preString service subCat: done")
+    } yield res
+  }
+
+  def trav(e1: Either[UserError, Long], e2: Either[UserError, Long]): Either[UserError, (Long, Long)] = {
+    e1 match {
+      case Left(value) => Left(value)
+      case Right(v1) =>
+        e2 match {
+          case Left(value) => Left(value)
+          case Right(v2)   => Right((v1, v2))
+        }
+    }
+  }
+
   //token
   def generateToken(authDto: AuthDto): F[String] = for {
     optUser      <- getOptionUser(authDto)

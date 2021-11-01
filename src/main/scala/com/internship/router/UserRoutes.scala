@@ -19,7 +19,7 @@ object UserRoutes {
 
     val LOGIN_HEADER_TOKEN = "loginToken"
 
-    def logIn(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ GET -> Root / "portal" / "logIn" =>
+    def logIn(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ GET -> Root / "portal" / "user" / "logIn" =>
       for {
         auth  <- req.as[AuthDto]
         answ   = userService.logIn(auth)
@@ -29,7 +29,7 @@ object UserRoutes {
       } yield res
     }
 
-    def logOut(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ GET -> Root / "portal" / "logOut" =>
+    def logOut(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ GET -> Root / "portal" / "user" / "logOut" =>
       for {
         headerExists <- req.headers.get(CaseInsensitiveString(LOGIN_HEADER_TOKEN)).isDefined.pure[F]
         answ          = userService.logOut(headerExists)
@@ -37,7 +37,23 @@ object UserRoutes {
       } yield res
     }
 
-    logIn() <+> logOut()
+    def subscribeGroup(): HttpRoutes[F] = HttpRoutes.of[F] {
+      case req @ POST -> Root / "portal" / "user" / "subscribe_category" / userId / categoryId =>
+        val res = for {
+          sub <- userService.subscribeCategory(userId, categoryId)
+        } yield sub
+        marshalResponse(res)
+    }
+
+    def subscribeSupplier(): HttpRoutes[F] = HttpRoutes.of[F] {
+      case req @ POST -> Root / "portal" / "user" / "subscribe_supplier" / userId / supplierId =>
+        val res = for {
+          sub <- userService.subscribeSupplier(userId, supplierId)
+        } yield sub
+        marshalResponse(res)
+    }
+
+    logIn() <+> logOut() <+> subscribeGroup() <+> subscribeSupplier()
   }
 
 }
