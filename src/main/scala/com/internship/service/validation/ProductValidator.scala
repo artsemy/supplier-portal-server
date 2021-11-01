@@ -17,6 +17,10 @@ object ProductValidator {
       override def message: String = "product name format"
     }
 
+    final case object ProductDescriptionFormat extends ProductValidationError {
+      override def message: String = "product description format"
+    }
+
     final case object ProductDateFormat extends ProductValidationError {
       override def message: String = "product date format"
     }
@@ -78,7 +82,7 @@ object ProductValidator {
     if (description.matches("[A-Z][a-z]{2,10}"))
       Right(description)
     else
-      Left(ProductNameFormat)
+      Left(ProductDescriptionFormat)
   }
 
   private def validatePrice(price: String): Either[ProductValidationError, String] = {
@@ -93,29 +97,11 @@ object ProductValidator {
   }
 
   private def validateProductStatus(productStatus: String): Either[ProductValidationError, ProductStatus] = {
-    productStatus match {
-      case "IN_PROCESSING" => Right(ProductStatus.InProcessing)
-      case "AVAILABLE"     => Right(ProductStatus.Available)
-      case "NOT_AVAILABLE" => Right(ProductStatus.NotAvailable)
-      case _               => Left(ProductStatusFormat)
-    }
+    ProductStatus.withNameInsensitiveEither(productStatus).left.map(_ => ProductStatusFormat)
   }
 
   def validateProductId(productId: String): Either[ProductValidationError, Long] = {
     Try(productId.toLong).toEither.left.map(_ => ProductIdFormat)
-  }
-
-  def validateCriteriaType(criteriaType: String): Either[ProductValidationError, Int] = {
-    criteriaType match {
-      case "name"             => Right(1)
-      case "publication_date" => Right(2)
-      case "update_date"      => Right(3)
-      case "description"      => Right(4)
-      case "price"            => Right(5)
-      case "supplier_id"      => Right(6)
-      case "product_status"   => Right(7)
-      case _                  => Left(ProductCriteriaFormat)
-    }
   }
 
   def validateSmartSearchDto(smartSearchDto: SmartSearchDto): Either[ProductValidationError, SmartSearchDto] = {

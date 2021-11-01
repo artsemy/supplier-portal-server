@@ -68,14 +68,6 @@ class DoobieProductDAO[F[_]: Functor: Bracket[*[_], Throwable]](tx: Transactor[F
       .transact(tx)
   }
 
-  override def search(searchLine: String): F[Map[Long, Product]] = {
-    val fr = fr"select p.id, name, publication_date, update_date, description, price, supplier_id, product_status " ++
-      fr"from product p JOIN product_category c ON p.id = c.product_id WHERE " ++ Fragment.const(searchLine)
-    fr.query[(Long, Product)]
-      .toMap
-      .transact(tx)
-  }
-
   override def smartSearch(smartSearchDto: SmartSearchDto): F[Map[Long, Product]] = {
     val line = buildLine(smartSearchDto)
     val fr = fr"select p.id, name ,publication_date, update_date, description, price, supplier_id, product_status " ++

@@ -1,18 +1,19 @@
 package com.internship
 
+import cats.effect.IO
 import com.internship.domain.ProductStatus
-import com.internship.dto.SearchDto
 import com.internship.error.ProductError
-import com.internship.service.search.SearchParsing
 import com.internship.util.CaseConversionUtil.snakeToCamel
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim, JwtHeader, JwtOptions}
+import cats.implicits._
 
 object TestClass {
   def main(args: Array[String]): Unit = {
     println("Hi")
 //    er.search()
-    val maybeString = None
-    println(maybeString.map(x => s"name LIKE '%$x%'").getOrElse(""))
+    val r = Right((1, 1))
+    val p = r.traverse { case (i, i1) => IO(1) }
+    println(p.unsafeRunSync())
   }
 }
 
@@ -34,45 +35,6 @@ object er {
     // res2: util.Try[(String, String, String)] = Failure(
     //   exception = pdi.jwt.exceptions.JwtValidationException: Invalid signature for this token or wrong algorithm.
     // )
-  }
-
-  def searchJson(): Unit = {
-    import io.circe.generic.auto._
-    import io.circe._
-    import io.circe.generic.JsonCodec
-    import io.circe.parser._
-    import io.circe.syntax._
-    val str =
-      """
-        |{"exact":[{"typ":"name","value":"PC"},{"typ":"description","value":"fast"}],"period":[{"typ":"publication_date","start":"2020-10-10","end":"2022-10-10"},{"typ":"update_date","start":"2020-10-10","end":"2022-10-10"}],"category":[1, 2]}
-        |""".stripMargin
-//    case class SearchD(exact: List[Pair], period: List[Triple], category: List[Int])
-//    case class Pair(typ: String, value: String)
-//    case class Triple(typ: String, start: String, end: String)
-    val dec: Either[Error, SearchDto] = decode[SearchDto](str)
-    println(dec)
-    /*
-    example search json
-    val str =
-      """
-        |{
-        |  "exact": [
-        |    {"typ": "name", "value": "PC"},
-        |    {"typ": "description", "value": "fast"}
-        |  ],
-        |  "period": [
-        |    {"typ": "publication_date", "start": "2020-10-10", "end": "2022-10-10"},
-        |    {"typ": "update_date", "start": "2020-10-10", "end": "2022-10-10"}
-        |  ],
-        |  "category": [1, 2]
-        |}
-        |""".stripMargin
-     */
-    for {
-      dto <- dec
-      s    = SearchParsing.parse(dto)
-      _    = println(s)
-    } yield ()
   }
 
   def search(): Unit = {

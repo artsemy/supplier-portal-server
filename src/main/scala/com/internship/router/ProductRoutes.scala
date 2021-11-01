@@ -3,7 +3,7 @@ package com.internship.router
 import cats.effect.Sync
 import cats.implicits._
 import com.internship.router.MarshalResponse.marshalResponse
-import com.internship.dto.{ProductDto, SearchDto, SmartSearchDto, UserTokenDto}
+import com.internship.dto.{ProductDto, SmartSearchDto, UserTokenDto}
 import com.internship.service.{ProductService, UserService}
 import org.http4s.{HttpRoutes, Request}
 import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
@@ -65,24 +65,6 @@ object ProductRoutes {
       marshalResponse(res)
     }
 
-    def searchBy(): HttpRoutes[F] = HttpRoutes.of[F] {
-      case req @ GET -> Root / "portal" / "product" / "search" / criteriaType / criteriaValue =>
-        val res = for {
-          token    <- getToken(req)
-          searched <- productService.searchBy(criteriaType, criteriaValue, token)
-        } yield searched
-        marshalResponse(res)
-    }
-
-    def search(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ GET -> Root / "portal" / "product" / "search" =>
-      val res = for {
-        token     <- getToken(req)
-        searchDto <- req.as[SearchDto]
-        search    <- productService.search(searchDto)
-      } yield search
-      marshalResponse(res)
-    }
-
     def smartSearch(): HttpRoutes[F] = HttpRoutes.of[F] {
       case req @ GET -> Root / "portal" / "product" / "smart_search" =>
         val res = for {
@@ -98,7 +80,7 @@ object ProductRoutes {
       token         = userTokenDto.getOrElse(UserTokenDto())
     } yield token
 
-    create() <+> read() <+> update() <+> delete() <+> readAll() <+> searchBy() <+> search() <+> smartSearch()
+    create() <+> read() <+> update() <+> delete() <+> readAll() <+> smartSearch()
   }
 
 }

@@ -12,7 +12,6 @@ trait ProductDAO[F[_]] {
   def update(productId: Long, product: Product): F[Int]
   def delete(productId: Long):    F[Int]
   def readAll(): F[Map[Long, Product]]
-  def search(searchLine:          String):         F[Map[Long, Product]]
   def smartSearch(smartSearchDto: SmartSearchDto): F[Map[Long, Product]]
 }
 
