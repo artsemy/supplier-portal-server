@@ -64,7 +64,7 @@ object ProductValidator {
   } yield Product(name, publicationDate, updateDate, description, price, supplierId, productStatus)
 
   private def validateName(name: String): Either[ProductValidationError, String] = {
-    if (name.matches("[A-Z][a-z]{2,10}"))
+    if (name.matches("[\\w\\s]{2,10}"))
       Right(name)
     else
       Left(ProductNameFormat)
@@ -79,7 +79,7 @@ object ProductValidator {
   }
 
   private def validateDescription(description: String): Either[ProductValidationError, String] = {
-    if (description.matches("[A-Z][a-z]{2,10}"))
+    if (description.matches("[\\w\\s]{2,10}"))
       Right(description)
     else
       Left(ProductDescriptionFormat)

@@ -67,7 +67,7 @@ object OrderValidator {
 
   def validateAddress(address: String): Either[OrderValidationError, String] = {
     val res: Either[OrderValidationError, String] =
-      if (address.matches("\\w+"))
+      if (address.matches("[\\w\\s]+"))
         Right(address)
       else
         Left(OrderAddressFormat)
