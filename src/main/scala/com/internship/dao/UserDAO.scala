@@ -6,11 +6,9 @@ import com.internship.domain.{Role, User}
 import doobie.util.transactor.Transactor
 
 trait UserDAO[F[_]] {
-  def getPass(login:            String):          F[Option[String]]
-  def getRole(id:               Long): F[Option[Role]]
-  def getUser(login:            String, password: String): F[Option[User]]
-  def subscribeSupplier(userId: Long, supplierId: Long): F[Int]
-  def subscribeCategory(userId: Long, categoryId: Long): F[Int]
+  def getPass(login: String): F[Option[String]]
+  def getRole(id:    Long): F[Option[Role]]
+  def getUser(login: String, password: String): F[Option[User]]
 }
 
 object UserDAO {

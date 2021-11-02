@@ -10,12 +10,10 @@ import io.chrisdavenport.log4cats.Logger
 import org.http4s.Headers
 
 trait UserService[F[_]] {
-  def logIn(authDto:            AuthDto):           F[Either[UserError, String]]
-  def logOut(tokenExists:       Boolean):           F[Either[UserError, String]]
-  def generateToken(authDto:    AuthDto):           F[String]
-  def decodeToken(token:        String): F[Either[UserError, UserTokenDto]]
-  def subscribeSupplier(userId: String, supplierId: String): F[Either[UserError, Int]]
-  def subscribeCategory(userId: String, categoryId: String): F[Either[UserError, Int]]
+  def logIn(authDto:         AuthDto): F[Either[UserError, String]]
+  def logOut(tokenExists:    Boolean): F[Either[UserError, String]]
+  def generateToken(authDto: AuthDto): F[String]
+  def decodeToken(token:     String):  F[Either[UserError, UserTokenDto]]
 }
 
 object UserService {

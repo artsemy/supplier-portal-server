@@ -16,69 +16,6 @@ class UserServiceImplTest extends AnyFreeSpec with MockFactory {
   implicit def unsafeLogger[F[_]: Sync] = Slf4jLogger.getLogger[F]
 
   "Methods tests" - {
-    "subscribeCategory" - {
-      "subscribeCategory: valid" in {
-        val userDAO     = mock[UserDAO[IO]]
-        val userService = new UserServiceImpl[IO](userDAO)
-
-        val validUserId     = "1"
-        val validCategoryId = "1"
-        val expected        = Right(1)
-
-        (userDAO.subscribeCategory _).expects(*, *).returning(1.pure[IO]).once()
-
-        val actual = userService.subscribeCategory(validUserId, validCategoryId).unsafeRunSync()
-
-        assert(expected == actual)
-      }
-
-      "subscribeCategory: invalid" in {
-        val userDAO     = mock[UserDAO[IO]]
-        val userService = new UserServiceImpl[IO](userDAO)
-
-        val validUserId       = "1"
-        val invalidCategoryId = "a"
-        val expected          = Left(CategoryIdFormat)
-
-        (userDAO.subscribeCategory _).expects(*, *).returning(1.pure[IO]).never()
-
-        val actual = userService.subscribeCategory(validUserId, invalidCategoryId).unsafeRunSync()
-
-        assert(expected == actual)
-      }
-    }
-
-    "subscribeSupplier" - {
-      "subscribeSupplier: valid" in {
-        val userDAO     = mock[UserDAO[IO]]
-        val userService = new UserServiceImpl[IO](userDAO)
-
-        val validUserId     = "1"
-        val validSupplierId = "1"
-        val expected        = Right(1)
-
-        (userDAO.subscribeSupplier _).expects(*, *).returning(1.pure[IO]).once()
-
-        val actual = userService.subscribeSupplier(validUserId, validSupplierId).unsafeRunSync()
-
-        assert(expected == actual)
-      }
-
-      "subscribeSupplier: invalid" in {
-        val userDAO     = mock[UserDAO[IO]]
-        val userService = new UserServiceImpl[IO](userDAO)
-
-        val validUserId       = "1"
-        val invalidSupplierId = "a"
-        val expected          = Left(SupplierIdFormat)
-
-        (userDAO.subscribeSupplier _).expects(*, *).returning(1.pure[IO]).never()
-
-        val actual = userService.subscribeSupplier(validUserId, invalidSupplierId).unsafeRunSync()
-
-        assert(expected == actual)
-      }
-    }
 
     "logIn" - {
       "logIn: valid" in {

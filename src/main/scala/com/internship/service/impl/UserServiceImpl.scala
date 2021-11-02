@@ -55,26 +55,6 @@ class UserServiceImpl[F[_]: Monad: Logger](userDAO: UserDAO[F]) extends UserServ
     _    <- Logger[F].info(s"$preString service encodePass: done")
   } yield pass
 
-  override def subscribeSupplier(userId: String, supplierId: String): F[Either[UserError, Int]] = {
-    for {
-      _   <- Logger[F].info(s"$preString service subSupp: try")
-      uId <- UserValidator.validateUserId(userId).pure[F]
-      sId <- UserValidator.validateSupplierId(supplierId).pure[F]
-      res <- traverseTwoTypes(uId, sId).traverse { case (id1, id2) => userDAO.subscribeSupplier(id1, id2) }
-      _   <- Logger[F].info(s"$preString service subSupp: done")
-    } yield res
-  }
-
-  override def subscribeCategory(userId: String, categoryId: String): F[Either[UserError, Int]] = {
-    for {
-      _   <- Logger[F].info(s"$preString service subCat: try")
-      uId <- UserValidator.validateUserId(userId).pure[F]
-      cId <- UserValidator.validateCategoryId(categoryId).pure[F]
-      res <- traverseTwoTypes(uId, cId).traverse { case (id1, id2) => userDAO.subscribeCategory(id1, id2) }
-      _   <- Logger[F].info(s"$preString service subCat: done")
-    } yield res
-  }
-
   //token
   def generateToken(authDto: AuthDto): F[String] = for {
     optUser      <- getOptionUser(authDto)

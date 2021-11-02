@@ -37,23 +37,7 @@ object UserRoutes {
       } yield res
     }
 
-    def subscribeGroup(): HttpRoutes[F] = HttpRoutes.of[F] {
-      case req @ POST -> Root / "portal" / "user" / "subscribe_category" / userId / categoryId =>
-        val res = for {
-          sub <- userService.subscribeCategory(userId, categoryId)
-        } yield sub
-        marshalResponse(res)
-    }
-
-    def subscribeSupplier(): HttpRoutes[F] = HttpRoutes.of[F] {
-      case req @ POST -> Root / "portal" / "user" / "subscribe_supplier" / userId / supplierId =>
-        val res = for {
-          sub <- userService.subscribeSupplier(userId, supplierId)
-        } yield sub
-        marshalResponse(res)
-    }
-
-    logIn() <+> logOut() <+> subscribeGroup() <+> subscribeSupplier()
+    logIn() <+> logOut()
   }
 
 }
