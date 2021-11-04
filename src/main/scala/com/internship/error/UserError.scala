@@ -20,8 +20,4 @@ object UserError {
     override def message: String = "can't find user with such login and password"
   }
 
-  final case class TokenNotFound() extends UserError {
-    override def message: String = "token not found"
-  }
-
 }

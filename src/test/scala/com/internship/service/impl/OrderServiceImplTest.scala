@@ -8,6 +8,7 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.freespec.AnyFreeSpec
 import com.internship.domain.{Order, OrderProduct, OrderStatus}
 import com.internship.service.validation.OrderValidator.OrderValidationError._
+import com.internship.util.ConverterToDto.convertOrderToDto
 
 class OrderServiceImplTest extends AnyFreeSpec with MockFactory {
 
@@ -21,7 +22,7 @@ class OrderServiceImplTest extends AnyFreeSpec with MockFactory {
         val orderService = new OrderServiceImpl[IO](orderDAO)
 
         val validOrderId  = "1"
-        val validOrderDto = orderService.convertOrderToDto(order)
+        val validOrderDto = convertOrderToDto(order)
         val expected      = Right(1)
 
         (orderDAO.update _).expects(*, *).returning(1.pure[IO]).once()
@@ -36,7 +37,7 @@ class OrderServiceImplTest extends AnyFreeSpec with MockFactory {
         val orderService = new OrderServiceImpl[IO](orderDAO)
 
         val invalidOrderId = "a"
-        val validOrderDto  = orderService.convertOrderToDto(order)
+        val validOrderDto  = convertOrderToDto(order)
         val expected       = Left(OrderIdFormat)
 
         (orderDAO.update _).expects(*, *).returning(1.pure[IO]).never()
@@ -114,7 +115,7 @@ class OrderServiceImplTest extends AnyFreeSpec with MockFactory {
         val orderService = new OrderServiceImpl[IO](orderDAO)
 
         val validOrderId = "1"
-        val expected     = Right(Some(orderService.convertOrderToDto(order)))
+        val expected     = Right(Some(convertOrderToDto(order)))
 
         (orderDAO.read _).expects(*).returning(Some(order).pure[IO]).once()
 
@@ -144,7 +145,7 @@ class OrderServiceImplTest extends AnyFreeSpec with MockFactory {
         val orderService = new OrderServiceImpl[IO](orderDAO)
 
         val validOrderId     = "1"
-        val validOrderDto    = orderService.convertOrderToDto(order)
+        val validOrderDto    = convertOrderToDto(order)
         val validOrderStatus = "assigned"
         val expected         = Right(1)
 
@@ -160,7 +161,7 @@ class OrderServiceImplTest extends AnyFreeSpec with MockFactory {
         val orderService = new OrderServiceImpl[IO](orderDAO)
 
         val validOrderId       = "1"
-        val validOrderDto      = orderService.convertOrderToDto(order)
+        val validOrderDto      = convertOrderToDto(order)
         val invalidOrderStatus = "delivered"
         val expected           = Left(OrderNextStatusFormat)
 
@@ -275,7 +276,7 @@ class OrderServiceImplTest extends AnyFreeSpec with MockFactory {
         val orderDAO     = mock[OrderDAO[IO]]
         val orderService = new OrderServiceImpl[IO](orderDAO)
 
-        val validOrderDto = orderService.convertOrderToDto(order)
+        val validOrderDto = convertOrderToDto(order)
         val expected      = Right(1)
 
         (orderDAO.create _).expects(*).returning(1.pure[IO]).once()
@@ -289,7 +290,7 @@ class OrderServiceImplTest extends AnyFreeSpec with MockFactory {
         val orderDAO     = mock[OrderDAO[IO]]
         val orderService = new OrderServiceImpl[IO](orderDAO)
 
-        val invalidOrderDto = orderService.convertOrderToDto(order).copy(orderStatus = "badStatus")
+        val invalidOrderDto = convertOrderToDto(order).copy(orderStatus = "badStatus")
         val expected        = Left(OrderStatusFormat)
 
         (orderDAO.create _).expects(*).returning(1.pure[IO]).never()

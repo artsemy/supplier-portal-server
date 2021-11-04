@@ -11,6 +11,7 @@ import com.internship.error.OrderError
 import com.internship.service.OrderService
 import com.internship.service.validation.OrderValidator
 import com.internship.util.TraverseEitherTupleUtil.{traverseThreeTypes, traverseTwoTypes}
+import com.internship.util.ConverterToDto.convertOrderToDto
 import io.chrisdavenport.log4cats.Logger
 import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 //import org.typelevel.log4cats.Logger
@@ -94,14 +95,5 @@ class OrderServiceImpl[F[_]: Monad: Sync](orderDAO: OrderDAO[F]) extends OrderSe
       }
       _ <- Logger[F].info(s"$preString order service change status: finish")
     } yield res
-
-  def convertOrderToDto(order: Order): OrderDto = {
-    OrderDto(
-      order.ownerId.toString,
-      order.courierId.toString,
-      order.orderStatus.toString,
-      order.address
-    )
-  }
 
 }

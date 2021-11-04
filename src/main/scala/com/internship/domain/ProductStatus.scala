@@ -11,4 +11,5 @@ object ProductStatus extends Enum[ProductStatus] with CirceEnum[ProductStatus] {
   final case object InProcessing extends ProductStatus
   final case object Available extends ProductStatus
   final case object NotAvailable extends ProductStatus
+  final case object SpecialOffer extends ProductStatus
 }

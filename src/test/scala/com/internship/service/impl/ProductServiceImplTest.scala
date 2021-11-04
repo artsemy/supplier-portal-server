@@ -7,6 +7,7 @@ import com.internship.domain.{Product, ProductStatus, Role}
 import com.internship.dto.{ProductDto, SmartSearchDto, UserTokenDto}
 import com.internship.error.ProductError.RoleNotMatch
 import com.internship.service.validation.ProductValidator.ProductValidationError._
+import com.internship.util.ConverterToDto.convertProductToDto
 import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.freespec.AnyFreeSpec
@@ -33,14 +34,13 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
         val productDAO     = mock[ProductDAO[IO]]
         val productService = new ProductServiceImpl[IO](productDAO)
 
-        val validProductId    = "1"
-        val validProductDto   = ProductDto("PC1", "2021-10-10", "2021-10-10", "Fast", "100.00", "1", "available")
-        val validUserTokenDto = UserTokenDto("Arty", Role.Manager.toString)
-        val expected          = Right(1)
+        val validProductId  = "1"
+        val validProductDto = ProductDto("PC1", "2021-10-10", "2021-10-10", "Fast", "100.00", "1", "available")
+        val expected        = Right(1)
 
         (productDAO.update _).expects(*, *).returning(1.pure[IO]).once()
 
-        val actual = productService.update(validProductId, validProductDto, validUserTokenDto).unsafeRunSync()
+        val actual = productService.update(validProductId, validProductDto).unsafeRunSync()
 
         assert(actual == expected)
       }
@@ -51,12 +51,11 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
 
         val validProductId    = "1"
         val invalidProductDto = ProductDto("PC1!", "2021-10-10", "2021-10-10", "Fast pc1", "100.00", "1", "available")
-        val validUserTokenDto = UserTokenDto("Arty", Role.Manager.toString)
         val expected          = Left(ProductNameFormat)
 
         (productDAO.update _).expects(*, *).returning(1.pure[IO]).never()
 
-        val actual = productService.update(validProductId, invalidProductDto, validUserTokenDto).unsafeRunSync()
+        val actual = productService.update(validProductId, invalidProductDto).unsafeRunSync()
 
         assert(actual == expected)
       }
@@ -67,13 +66,12 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
         val productDAO     = mock[ProductDAO[IO]]
         val productService = new ProductServiceImpl[IO](productDAO)
 
-        val validProductId    = "1"
-        val validUserTokenDto = UserTokenDto("Arty", "Client")
-        val expected          = Right(Some(productService.convertProductToDto(product)))
+        val validProductId = "1"
+        val expected       = Right(Some(convertProductToDto(product)))
 
         (productDAO.read _).expects(*).returning(Some(product).pure[IO]).once()
 
-        val actual = productService.read(validProductId, validUserTokenDto).unsafeRunSync()
+        val actual = productService.read(validProductId).unsafeRunSync()
 
         assert(actual == expected)
       }
@@ -82,13 +80,12 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
         val productDAO     = mock[ProductDAO[IO]]
         val productService = new ProductServiceImpl[IO](productDAO)
 
-        val invalidProductId  = "a"
-        val validUserTokenDto = UserTokenDto("Arty", "Client")
-        val expected          = Left(ProductIdFormat)
+        val invalidProductId = "a"
+        val expected         = Left(ProductIdFormat)
 
         (productDAO.read _).expects(*).returning(Some(product).pure[IO]).never()
 
-        val actual = productService.read(invalidProductId, validUserTokenDto).unsafeRunSync()
+        val actual = productService.read(invalidProductId).unsafeRunSync()
 
         assert(actual == expected)
       }
@@ -101,7 +98,7 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
 
         val validSmartSearchDto =
           SmartSearchDto(name = Some("PC1"), None, None, None, None, None, None, None, None, None)
-        val expected = Right(Map(1L -> productService.convertProductToDto(product)))
+        val expected = Right(Map(1L -> convertProductToDto(product)))
 
         (productDAO.smartSearch _).expects(*).returning(Map(1L -> product).pure[IO])
 
@@ -131,12 +128,11 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
         val productDAO     = mock[ProductDAO[IO]]
         val productService = new ProductServiceImpl[IO](productDAO)
 
-        val validUserTokenDto = UserTokenDto("Arty", "Client")
-        val expected          = Right(Map(1L -> productService.convertProductToDto(product)))
+        val expected = Right(Map(1L -> convertProductToDto(product)))
 
         (productDAO.readAll _).expects().returning(Map(1L -> product).pure[IO]).once()
 
-        val actual = productService.readAll(validUserTokenDto).unsafeRunSync()
+        val actual = productService.readAll().unsafeRunSync()
 
         assert(actual == expected)
       }
@@ -145,12 +141,11 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
         val productDAO     = mock[ProductDAO[IO]]
         val productService = new ProductServiceImpl[IO](productDAO)
 
-        val invalidUserTokenDto = UserTokenDto("Arty", "BAD_ROLE")
-        val expected            = Right(Map(1L -> productService.convertProductToDto(product))) //Left(RoleNotMatch)
+        val expected = Right(Map(1L -> convertProductToDto(product))) //Left(RoleNotMatch)
 
         (productDAO.readAll _).expects().returning(Map(1L -> product).pure[IO]).once() //never()
 
-        val actual = productService.readAll(invalidUserTokenDto).unsafeRunSync()
+        val actual = productService.readAll().unsafeRunSync()
 
         assert(actual == expected)
       }
@@ -161,13 +156,12 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
         val productDAO     = mock[ProductDAO[IO]]
         val productService = new ProductServiceImpl[IO](productDAO)
 
-        val validProductId    = "1"
-        val validUserTokenDto = UserTokenDto("Arty", "Manager")
-        val expected          = Right(1)
+        val validProductId = "1"
+        val expected       = Right(1)
 
         (productDAO.delete _).expects(*).returning(1.pure[IO]).once()
 
-        val actual = productService.delete(validProductId, validUserTokenDto).unsafeRunSync()
+        val actual = productService.delete(validProductId).unsafeRunSync()
 
         assert(actual == expected)
       }
@@ -176,13 +170,12 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
         val productDAO     = mock[ProductDAO[IO]]
         val productService = new ProductServiceImpl[IO](productDAO)
 
-        val validProductId      = "1"
-        val invalidUserTokenDto = UserTokenDto("Arty", "Client")
-        val expected            = Left(RoleNotMatch())
+        val validProductId = "1"
+        val expected       = Left(RoleNotMatch())
 
         (productDAO.delete _).expects(*).returning(1.pure[IO]).never()
 
-        val actual = productService.delete(validProductId, invalidUserTokenDto).unsafeRunSync()
+        val actual = productService.delete(validProductId).unsafeRunSync()
 
         assert(actual == expected)
       }
@@ -193,13 +186,12 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
         val productDAO     = mock[ProductDAO[IO]]
         val productService = new ProductServiceImpl[IO](productDAO)
 
-        val validUserTokenDto = UserTokenDto("Arty", "Manager")
-        val validProductDto   = productService.convertProductToDto(product)
-        val expected          = Right(1)
+        val validProductDto = convertProductToDto(product)
+        val expected        = Right(1)
 
         (productDAO.create _).expects(*).returning(1.pure[IO]).once()
 
-        val actual = productService.create(validProductDto, validUserTokenDto).unsafeRunSync()
+        val actual = productService.create(validProductDto).unsafeRunSync()
 
         assert(actual == expected)
       }
@@ -208,13 +200,12 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
         val productDAO     = mock[ProductDAO[IO]]
         val productService = new ProductServiceImpl[IO](productDAO)
 
-        val validUserTokenDto = UserTokenDto("Arty", "Manager")
-        val invalidProductDto = productService.convertProductToDto(product.copy(name = "PC1!"))
+        val invalidProductDto = convertProductToDto(product.copy(name = "PC1!"))
         val expected          = Left(ProductNameFormat) //fix
 
         (productDAO.create _).expects(*).returning(1.pure[IO]).never()
 
-        val actual = productService.create(invalidProductDto, validUserTokenDto).unsafeRunSync()
+        val actual = productService.create(invalidProductDto).unsafeRunSync()
 
         assert(actual == expected)
       }

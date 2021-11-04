@@ -6,6 +6,7 @@ import com.internship.dao.UserDAO
 import com.internship.domain.{Role, User}
 import com.internship.dto.AuthDto
 import com.internship.error.UserError._
+import com.internship.constant.ConstantStrings._
 import com.internship.service.validation.UserValidator.UserValidationError._
 import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 import org.scalamock.scalatest.MockFactory
@@ -23,7 +24,7 @@ class UserServiceImplTest extends AnyFreeSpec with MockFactory {
         val userService = new UserServiceImpl[IO](userDAO)
 
         val validAuthDto = AuthDto("Arty", "1234")
-        val expected     = Right("logged in") //fix later
+        val expected     = Right(LOG_IN_MESSAGE) //fix later
 
         (userDAO.getUser _)
           .expects(*, *)
@@ -59,7 +60,7 @@ class UserServiceImplTest extends AnyFreeSpec with MockFactory {
         val userService = new UserServiceImpl[IO](userDAO)
 
         val validFlag = true
-        val expected  = Right("logged out")
+        val expected  = Right(LOG_OUT_MESSAGE)
 
         val actual = userService.logOut(validFlag).unsafeRunSync()
 

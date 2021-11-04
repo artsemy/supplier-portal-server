@@ -30,7 +30,7 @@ object AppContext {
     subscriptionDAO     = SubscriptionDAO.of[F](tx)
     subscriptionService = SubscriptionService.of(subscriptionDAO)
 
-    httpApp = (UserRoutes.routes[F](userService) <+> ProductRoutes.routes[F](productService, userService) <+>
+    httpApp = (UserRoutes.routes[F](userService) <+> ProductRoutes.routes[F](productService) <+>
       OrderRoutes.routes[F](orderService) <+> SubscriptionRouter.routes[F](subscriptionService)).orNotFound
   } yield httpApp
 
