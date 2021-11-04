@@ -2,7 +2,7 @@ package com.internship.service.impl
 
 import cats.implicits._
 import cats.Monad
-import cats.effect.{Resource, Sync}
+import cats.effect.Sync
 import com.internship.constant.ConstantStrings.preString
 import com.internship.dao.NotificationDAO
 import com.internship.domain.{NotificationCategory, NotificationSupplier}

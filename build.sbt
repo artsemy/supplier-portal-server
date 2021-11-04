@@ -77,9 +77,10 @@ libraryDependencies ++= Seq(
   "org.scalamock"            %% "scalamock"                     % "5.1.0"               % Test,
   "org.scalatest"            %% "scalatest"                     % "3.1.0"               % Test,
   "io.monix"                 %% "monix"                         % "3.4.0",
-  "com.emarsys"              %% "scheduler"                     % "0.4.5"
-//  "org.typelevel"         %% "log4cats-core"        % "2.1.1", // Only if you want to Support Any Backend
-//  "org.typelevel"         %% "log4cats-slf4j"       % "2.1.1" // Direct Slf4j Support - Recommended
+  "com.emarsys"              %% "scheduler"                     % "0.4.5",
+//  "dev.profunktor"           %% "http4s-jwt-auth"               % "1.0.0",
+//  "org.typelevel"            %% "log4cats-core"                 % "2.1.1", // Only if you want to Support Any Backend
+//  "org.typelevel"            %% "log4cats-slf4j"                % "2.1.1" // Direct Slf4j Support - Recommended
 )
 
 addCompilerPlugin(
