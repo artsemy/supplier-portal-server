@@ -4,7 +4,6 @@ import cats.effect.Sync
 import com.internship.dao.SubscriptionDAO
 import com.internship.error.SubscriptionError
 import com.internship.service.impl.SubscriptionServiceImpl
-import io.chrisdavenport.log4cats.Logger
 
 trait SubscriptionService[F[_]] {
   def addSubscriptionCategory(userId:     String, categoryId: String): F[Either[SubscriptionError, Int]]
@@ -17,6 +16,6 @@ trait SubscriptionService[F[_]] {
 }
 
 object SubscriptionService {
-  def of[F[_]: Sync: Logger](subscriptionDAO: SubscriptionDAO[F]): SubscriptionService[F] =
+  def of[F[_]: Sync](subscriptionDAO: SubscriptionDAO[F]): SubscriptionService[F] =
     new SubscriptionServiceImpl[F](subscriptionDAO)
 }

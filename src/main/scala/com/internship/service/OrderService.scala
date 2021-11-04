@@ -6,8 +6,6 @@ import com.internship.domain.OrderProduct
 import com.internship.dto.OrderDto
 import com.internship.error.OrderError
 import com.internship.service.impl.OrderServiceImpl
-import io.chrisdavenport.log4cats.Logger
-//import org.typelevel.log4cats.Logger
 
 trait OrderService[F[_]] {
   def create(orderDto: OrderDto): F[Either[OrderError, Int]]
@@ -24,5 +22,5 @@ trait OrderService[F[_]] {
 }
 
 object OrderService {
-  def of[F[_]: Sync: Logger](orderDAO: OrderDAO[F]): OrderService[F] = new OrderServiceImpl[F](orderDAO)
+  def of[F[_]: Sync](orderDAO: OrderDAO[F]): OrderService[F] = new OrderServiceImpl[F](orderDAO)
 }

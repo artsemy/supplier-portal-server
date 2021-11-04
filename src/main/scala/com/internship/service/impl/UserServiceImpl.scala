@@ -3,6 +3,7 @@ package com.internship.service.impl
 import cats.implicits._
 import cats.Monad
 import cats.data.EitherT
+import cats.effect.Sync
 import cats.implicits._
 import com.internship.dao.UserDAO
 import com.internship.error.UserError
@@ -12,6 +13,7 @@ import com.internship.service.UserService
 import com.internship.domain._
 import com.internship.service.validation.UserValidator
 import io.chrisdavenport.log4cats.Logger
+import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 //import org.typelevel.log4cats.Logger
 import pdi.jwt.{Jwt, JwtAlgorithm}
 import io.circe._
@@ -19,14 +21,12 @@ import io.circe.parser._
 import io.circe.generic.auto._
 
 import com.internship.util.TraverseEitherTupleUtil._
+import com.internship.constant.ConstantStrings._
 import scala.util.{Failure, Success, Try}
 
-class UserServiceImpl[F[_]: Monad: Logger](userDAO: UserDAO[F]) extends UserService[F] {
+class UserServiceImpl[F[_]: Monad: Sync](userDAO: UserDAO[F]) extends UserService[F] {
 
-  val LOG_OUT_MESSAGE = "logged out"
-  val LOG_IN_MESSAGE  = "logged in"
-  val SECRET_WORD     = "secretWord"
-  val preString       = "-" * 100
+  implicit def unsafeLogger[F[_]: Sync] = Slf4jLogger.getLogger[F]
 
   override def logIn(authDto: AuthDto): F[Either[UserError, String]] = {
     for {

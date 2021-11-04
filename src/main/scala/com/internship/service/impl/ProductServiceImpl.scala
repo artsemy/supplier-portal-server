@@ -3,6 +3,7 @@ package com.internship.service.impl
 import cats.Monad
 import cats.effect.Sync
 import cats.implicits._
+import com.internship.constant.ConstantStrings.preString
 import com.internship.dto.{ProductDto, SmartSearchDto, UserTokenDto}
 import com.internship.service.ProductService
 import com.internship.dao.ProductDAO
@@ -15,10 +16,12 @@ import io.chrisdavenport.log4cats.Logger
 import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 //import org.typelevel.log4cats.Logger
 
-class ProductServiceImpl[F[_]: Monad: Logger](productDAO: ProductDAO[F]) extends ProductService[F] {
+class ProductServiceImpl[F[_]: Monad: Sync](productDAO: ProductDAO[F]) extends ProductService[F] {
+
+  implicit def unsafeLogger[F[_]: Sync] = Slf4jLogger.getLogger[F]
 
   override def create(productDto: ProductDto, userTokenDto: UserTokenDto): F[Either[ProductError, Int]] = for {
-    _ <- Logger[F].info("product service create: try")
+    _ <- Logger[F].info(s"$preString product service create: try")
     res <-
       if (userTokenDto.role == Role.Manager.toString) {
         ProductValidator
@@ -30,11 +33,11 @@ class ProductServiceImpl[F[_]: Monad: Logger](productDAO: ProductDAO[F]) extends
         val roleError: Either[ProductError, Int] = Left(RoleNotMatch())
         roleError.pure[F]
       }
-    _ <- Logger[F].info("product service create: finish")
+    _ <- Logger[F].info(s"$preString product service create: finish")
   } yield res
 
   override def read(productId: String, userTokenDto: UserTokenDto): F[Either[ProductError, Option[ProductDto]]] = for {
-    _ <- Logger[F].info("product service read: try")
+    _ <- Logger[F].info(s"$preString product service read: try")
     res <-
       if (
         userTokenDto.role == Role.Manager.toString ||
@@ -52,7 +55,7 @@ class ProductServiceImpl[F[_]: Monad: Logger](productDAO: ProductDAO[F]) extends
         val roleError: Either[ProductError, Option[ProductDto]] = Left(RoleNotMatch())
         roleError.pure[F]
       }
-    _ <- Logger[F].info("product service read: finish")
+    _ <- Logger[F].info(s"$preString product service read: finish")
   } yield res
 
   override def update(
@@ -60,7 +63,7 @@ class ProductServiceImpl[F[_]: Monad: Logger](productDAO: ProductDAO[F]) extends
     productDto:   ProductDto,
     userTokenDto: UserTokenDto
   ): F[Either[ProductError, Int]] = for {
-    _ <- Logger[F].info("product service update: try")
+    _ <- Logger[F].info(s"$preString product service update: try")
     res <-
       if (userTokenDto.role == Role.Manager.toString) {
         traverseTwoTypes(
@@ -73,11 +76,11 @@ class ProductServiceImpl[F[_]: Monad: Logger](productDAO: ProductDAO[F]) extends
         val roleError: Either[ProductError, Int] = Left(RoleNotMatch())
         roleError.pure[F]
       }
-    _ <- Logger[F].info("product service update: try")
+    _ <- Logger[F].info(s"$preString product service update: try")
   } yield res
 
   override def delete(productId: String, userTokenDto: UserTokenDto): F[Either[ProductError, Int]] = for {
-    _ <- Logger[F].info("product service delete: try")
+    _ <- Logger[F].info(s"$preString product service delete: try")
     res <-
       if (userTokenDto.role == Role.Manager.toString) {
         ProductValidator
@@ -91,7 +94,7 @@ class ProductServiceImpl[F[_]: Monad: Logger](productDAO: ProductDAO[F]) extends
         val roleError: Either[ProductError, Int] = Left(RoleNotMatch())
         roleError.pure[F]
       }
-    _ <- Logger[F].info("product service delete: finish")
+    _ <- Logger[F].info(s"$preString product service delete: finish")
   } yield res
 
   override def readAll(userTokenDto: UserTokenDto): F[Either[ProductError, Map[Long, ProductDto]]] = for {
@@ -99,16 +102,16 @@ class ProductServiceImpl[F[_]: Monad: Logger](productDAO: ProductDAO[F]) extends
     initMap      <- productDAO.readAll()
     convertedMap <- initMap.map { case (l, product) => (l, convertProductToDto(product)) }.pure[F]
     res: Either[ProductError, Map[Long, ProductDto]] = convertedMap.asRight
-    _ <- Logger[F].info("product service readAll: finish")
+    _ <- Logger[F].info(s"$preString product service readAll: finish")
   } yield res
 
   override def smartSearch(smartSearchDto: SmartSearchDto): F[Either[ProductError, Map[Long, ProductDto]]] = for {
-    _ <- Logger[F].info("product service search: try")
+    _ <- Logger[F].info(s"$preString product service search: try")
     res <- ProductValidator
       .validateSmartSearchDto(smartSearchDto)
       .traverse { dto => productDAO.smartSearch(dto) }
       .map(x => x.map(y => y.map { case (l, product) => (l, convertProductToDto(product)) }))
-    _ <- Logger[F].info("product service search: finish")
+    _ <- Logger[F].info(s"$preString product service search: finish")
   } yield res
 
   def convertProductToDto(product: Product): ProductDto = {
