@@ -25,7 +25,7 @@ class DoobieSubscriptionDAO[F[_]: Functor: Bracket[*[_], Throwable]](tx: Transac
   override def readAllSubscriptionCategory(userId: Long): F[Map[Long, String]] = {
     val fr = fr"select s.id, name from subscriptions_category s join category c " ++
       fr"on s.category_id = c.id where " ++
-      fr"user_id = $userId"
+      fr"users_id = $userId"
     fr.query[(Long, String)].toMap.transact(tx)
   }
 

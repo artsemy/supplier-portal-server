@@ -33,12 +33,18 @@ object SupplierPortalServer extends IOApp {
 //login & logout
 curl -XGET "localhost:9000/portal/user/logIn" -H "Content-Type: application/json" -d "{\"login\": \"arty1\", \"password\": \"1234\"}"
 curl "localhost:9000/portal/user/logOut" -H "loginToken: $token$"
-curl -XPOST "localhost:9000/portal/user/subscribe_category/1/1"
-curl -XPOST "localhost:9000/portal/user/subscribe_supplier/1/1"
+-----------------------------------------------------------------------------
+//subs
+curl "localhost:9000/portal/subs/all_cat/5"
+curl "localhost:9000/portal/subs/all_sup/5"
+curl -XPOST "localhost:9000/portal/subs/add_cat/1/1"
+curl -XPOST "localhost:9000/portal/subs/add_sup/1/1"
+curl -XPOST "localhost:9000/portal/subs/remove_sup/1/1"
+curl -XPOST "localhost:9000/portal/subs/remove_cat/1/1"
 ---------------------------------------------------------------------------
 //token arty5 - manager //product
 create
-curl -XPOST "localhost:9000/portal/product/create" -H "loginToken: yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI" -H "Content-Type: application/json" -d "{\"name\": \"Pccc\", \"publicationDate\": \"2010-10-10\", \"updateDate\": \"2010-10-10\", \"description\": \"Descr\", \"price\": \"123.00\", \"supplierId\": \"2\", \"productStatus\": \"AVAILABLE\"}"
+curl -XPOST "localhost:9000/portal/product/create" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI" -H "Content-Type: application/json" -d "{\"name\": \"Pccc\", \"publicationDate\": \"2010-10-10\", \"updateDate\": \"2010-10-10\", \"description\": \"Descr\", \"price\": \"123.00\", \"supplierId\": \"2\", \"productStatus\": \"AVAILABLE\"}"
 read one by id
 curl "localhost:9000/portal/product/read/7" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI"
 update
@@ -48,7 +54,9 @@ curl -XPOST "localhost:9000/portal/product/delete/7" -H "loginToken: eyJ0eXAiOiJ
 readAll
 curl "localhost:9000/portal/product/read_all" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI"
 smartSearch
-curl -XGET "localhost:9000/portal/product/smart_search" -H "Content-Type: application/json" -d "{\"name\": \"PC\", \"pubDatePeriod\": [\"2010-10-10\", \"2022-10-10\"], \"listCategoryId\": [1, 2]}"
+curl -XGET "localhost:9000/portal/product/smart_search" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI" -H "Content-Type: application/json" -d "{\"name\": \"PC\", \"pubDatePeriod\": [\"2010-10-10\", \"2022-10-10\"], \"listCategoryId\": [1, 2]}"
+curl -XGET "localhost:9000/portal/product/smart_search" -H "loginToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHk1Iiwicm9sZSI6Ik1hbmFnZXIifQ.OpC6WDPMXTyPyLZd-M3cAZk_nXdfLStGQx_sWCnIJLI" -H "Content-Type: application/json" -d "{\"name\": \"PC\"}"
+
 ---------------------------------------------------------------------------
 //order token user1(CLIENT): eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFydHkxIiwicm9sZSI6IkNsaWVudCJ9.qFO-jV5m-866TDwe-qTkIjQ8uTLjy_6_8IlDwFHVVNw
 create

@@ -24,6 +24,10 @@ INSERT INTO product(name, publication_date, update_date, description, price, sup
 VALUES
 ('PC4', '2021-10-10', '2021-10-10', 'fast pc4', '50.00', 1, 'SPECIAL_OFFER');
 
+INSERT INTO product_category(product_id, category_id)
+VALUES
+(7, 1);
+
 INSERT INTO special_offer(product_id, users_id)
 VALUES
 (7, 1);

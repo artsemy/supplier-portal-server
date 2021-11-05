@@ -8,9 +8,10 @@ import com.internship.service.UserService
 import org.http4s.{EntityEncoder, Header, HeaderKey, HttpRoutes}
 import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
 import org.http4s.dsl.Http4sDsl
+import org.http4s.util.CaseInsensitiveString
 import com.internship.router.MarshalResponse._
 import com.internship.util.TokenUtil
-import org.http4s.util.CaseInsensitiveString
+import com.internship.util.TraverseEitherTupleUtil._
 
 object UserRoutes {
 
@@ -24,14 +25,9 @@ object UserRoutes {
         auth <- req.as[AuthDto]
         user <- userService.logIn(auth)
         token = TokenUtil.generateToken(user)
-//        _      = println(token.getOrElse("token not created"))
-        res <- token match {
-          case Left(_) => marshalResponse(token.pure[F])
-          case Right(value) =>
-            marshalResponse(token.map(_ => LOG_IN_MESSAGE).pure[F]).map(x =>
-              x.putHeaders(Header(LOGIN_HEADER_TOKEN, value))
-            )
-        }
+//        _        = println(token.getOrElse("token not created"))
+        loggedIn = traverseTwoTypes(user, token).map { case (_, _) => LOG_IN_MESSAGE }
+        res     <- marshalResponse(loggedIn.pure[F])
       } yield res
     }
 

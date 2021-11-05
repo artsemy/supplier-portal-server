@@ -1,5 +1,8 @@
 package com.internship.dto
 
+import io.circe.generic.JsonCodec
+
+@JsonCodec
 case class SmartSearchDto(
   name:           Option[String],
   pubDate:        Option[String],
