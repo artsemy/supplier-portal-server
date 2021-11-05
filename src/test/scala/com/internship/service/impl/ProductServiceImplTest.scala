@@ -3,9 +3,8 @@ package com.internship.service.impl
 import cats.effect.{IO, Sync}
 import cats.implicits._
 import com.internship.dao.ProductDAO
-import com.internship.domain.{Product, ProductStatus, Role}
-import com.internship.dto.{ProductDto, SmartSearchDto, UserTokenDto}
-import com.internship.error.ProductError.RoleNotMatch
+import com.internship.domain.{Product, ProductStatus}
+import com.internship.dto.{ProductDto, SmartSearchDto}
 import com.internship.service.validation.ProductValidator.ProductValidationError._
 import com.internship.util.ConverterToDto.convertProductToDto
 import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
@@ -141,9 +140,9 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
         val productDAO     = mock[ProductDAO[IO]]
         val productService = new ProductServiceImpl[IO](productDAO)
 
-        val expected = Right(Map(1L -> convertProductToDto(product))) //Left(RoleNotMatch)
+        val expected = Right(Map(1L -> convertProductToDto(product)))
 
-        (productDAO.readAll _).expects().returning(Map(1L -> product).pure[IO]).once() //never()
+        (productDAO.readAll _).expects().returning(Map(1L -> product).pure[IO]).once()
 
         val actual = productService.readAll().unsafeRunSync()
 
@@ -170,12 +169,12 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
         val productDAO     = mock[ProductDAO[IO]]
         val productService = new ProductServiceImpl[IO](productDAO)
 
-        val validProductId = "1"
-        val expected       = Left(RoleNotMatch())
+        val invalidProductId = "a"
+        val expected         = Left(ProductIdFormat)
 
         (productDAO.delete _).expects(*).returning(1.pure[IO]).never()
 
-        val actual = productService.delete(validProductId).unsafeRunSync()
+        val actual = productService.delete(invalidProductId).unsafeRunSync()
 
         assert(actual == expected)
       }
@@ -201,7 +200,7 @@ class ProductServiceImplTest extends AnyFreeSpec with MockFactory {
         val productService = new ProductServiceImpl[IO](productDAO)
 
         val invalidProductDto = convertProductToDto(product.copy(name = "PC1!"))
-        val expected          = Left(ProductNameFormat) //fix
+        val expected          = Left(ProductNameFormat)
 
         (productDAO.create _).expects(*).returning(1.pure[IO]).never()
 

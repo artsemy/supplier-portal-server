@@ -7,7 +7,6 @@ import com.internship.domain.{Role, User}
 import com.internship.dto.AuthDto
 import com.internship.error.UserError._
 import com.internship.constant.ConstantStrings._
-import com.internship.service.validation.UserValidator.UserValidationError._
 import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.freespec.AnyFreeSpec
@@ -24,11 +23,12 @@ class UserServiceImplTest extends AnyFreeSpec with MockFactory {
         val userService = new UserServiceImpl[IO](userDAO)
 
         val validAuthDto = AuthDto("Arty", "1234")
-        val expected     = Right(LogInMessage) //fix later
+        val user         = User("login", "pass", Role.Client, "em5@gmail.com")
+        val expected     = Right(user)
 
         (userDAO.getUser _)
           .expects(*, *)
-          .returning(Some(User("login", "pass", Role.Client, "em5@gmail.com")).pure[IO])
+          .returning(Some(user).pure[IO])
           .once()
 
         val actual = userService.logIn(validAuthDto).unsafeRunSync()
@@ -41,11 +41,11 @@ class UserServiceImplTest extends AnyFreeSpec with MockFactory {
         val userService = new UserServiceImpl[IO](userDAO)
 
         val invalidAuthDto = AuthDto("Arty", "1234")
-        val expected       = Left(UserNotFound()) //fix later
+        val expected       = Left(UserNotFound())
 
         (userDAO.getUser _)
           .expects(*, *)
-          .returning(None.pure[IO]) //fix later
+          .returning(None.pure[IO])
           .once()
 
         val actual = userService.logIn(invalidAuthDto).unsafeRunSync()
