@@ -5,7 +5,6 @@ import cats.effect.Bracket
 import com.internship.dao.SubscriptionDAO
 import doobie.util.transactor.Transactor
 import doobie.implicits._
-import doobie.util.fragment.Fragment
 
 class DoobieSubscriptionDAO[F[_]: Functor: Bracket[*[_], Throwable]](tx: Transactor[F]) extends SubscriptionDAO[F] {
 

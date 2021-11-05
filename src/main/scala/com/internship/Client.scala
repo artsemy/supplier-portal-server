@@ -2,7 +2,7 @@ package com.internship
 
 import cats.implicits._
 import cats.effect.{ExitCode, IO, IOApp}
-import com.internship.constant.ConstantStrings.LOGIN_HEADER_TOKEN
+import com.internship.constant.ConstantStrings.LoginHeaderToken
 import com.internship.domain.{OrderProduct, OrderStatus}
 import com.internship.dto.{AuthDto, OrderDto, ProductDto, SmartSearchDto}
 import org.http4s._
@@ -28,7 +28,7 @@ object UserClient extends IOApp {
           _ <- printLine("valid input")
 
           _ <- client.expect[String](Method.GET(authDto, uri / "logIn")) >>= printLine
-          _ <- client.expect[String](Method.GET(uri / "logOut", Header(LOGIN_HEADER_TOKEN, "some token"))) >>= printLine
+          _ <- client.expect[String](Method.GET(uri / "logOut", Header(LoginHeaderToken, "some token"))) >>= printLine
 
           _ <- printLine("invalid input")
 
@@ -124,7 +124,7 @@ object ProductClient extends IOApp {
           _ <- printLine("valid input")
 
           id <- client
-            .expect[Int](Method.POST(vpDto, uri / "create", Header(LOGIN_HEADER_TOKEN, managerToken)))
+            .expect[Int](Method.POST(vpDto, uri / "create", Header(LoginHeaderToken, managerToken)))
           _ <- printLine(s"create id: $id")
           _ <- client
             .expect[Int](
@@ -132,36 +132,36 @@ object ProductClient extends IOApp {
                 .POST(
                   vpDto.copy(price = "1.00"),
                   uri / "update" / id.toString,
-                  Header(LOGIN_HEADER_TOKEN, managerToken)
+                  Header(LoginHeaderToken, managerToken)
                 )
             )
             .flatMap(x => printLine("update one: " + x.toString))
           _ <- client
             .expect[Option[ProductDto]](
-              Method.GET(uri / "read" / id.toString, Header(LOGIN_HEADER_TOKEN, managerToken))
+              Method.GET(uri / "read" / id.toString, Header(LoginHeaderToken, managerToken))
             )
             .flatMap(x => printLine("read: " + x.toString))
           _ <- client
-            .expect[Int](Method.POST(uri / "delete" / id.toString, Header(LOGIN_HEADER_TOKEN, managerToken)))
+            .expect[Int](Method.POST(uri / "delete" / id.toString, Header(LoginHeaderToken, managerToken)))
             .flatMap(x => printLine("delete one: " + x.toString))
           _ <- client
-            .expect[Map[Long, ProductDto]](Method.GET(uri / "read_all", Header(LOGIN_HEADER_TOKEN, managerToken)))
+            .expect[Map[Long, ProductDto]](Method.GET(uri / "read_all", Header(LoginHeaderToken, managerToken)))
             .flatMap(x => printLine("all prod: " + x.map(y => "\n" + y.toString())))
           _ <- client
             .expect[Map[Long, ProductDto]](
-              Method.GET(sDto, uri / "smart_search", Header(LOGIN_HEADER_TOKEN, managerToken))
+              Method.GET(sDto, uri / "smart_search", Header(LoginHeaderToken, managerToken))
             )
             .flatMap(x => printLine("search 4: " + x.map(y => "\n" + y.toString())))
 
           _ <- printLine("invalid input")
 
           _ <- client
-            .expect[String](Method.POST(ivpDto, uri / "create", Header(LOGIN_HEADER_TOKEN, managerToken))) >>= printLine
+            .expect[String](Method.POST(ivpDto, uri / "create", Header(LoginHeaderToken, managerToken))) >>= printLine
           _ <- client
-            .expect[String](Method.POST(ivpDto, uri / "create", Header(LOGIN_HEADER_TOKEN, clientToken))) >>= printLine
+            .expect[String](Method.POST(ivpDto, uri / "create", Header(LoginHeaderToken, clientToken))) >>= printLine
           _ <- client
             .expect[String](
-              Method.POST(ivpDto, uri / "create", Header(LOGIN_HEADER_TOKEN, managerToken.tail))
+              Method.POST(ivpDto, uri / "create", Header(LoginHeaderToken, managerToken.tail))
             ) >>= printLine
 
         } yield ()

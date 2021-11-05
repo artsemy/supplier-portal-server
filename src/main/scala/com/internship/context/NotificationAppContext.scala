@@ -26,9 +26,9 @@ object NotificationAppContext {
     _ <- Resource.eval(for {
       x <- notificationService.sendMessageCategoryUpdate()
       y <- notificationService.sendMessageSupplierUpdate()
-    } yield (x + y)) runOn Schedule.spaced(10.seconds)
+    } yield x + y) runOn Schedule.spaced(10.seconds)
 
-    httpApp = (NotificationRouter.routes[F]()).orNotFound
+    httpApp = NotificationRouter.routes[F]().orNotFound
   } yield httpApp
 
 }

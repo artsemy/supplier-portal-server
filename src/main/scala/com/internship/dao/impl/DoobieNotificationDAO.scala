@@ -5,13 +5,7 @@ import cats.effect.Bracket
 import com.internship.dao.NotificationDAO
 import com.internship.domain.{NotificationCategory, NotificationSupplier}
 import doobie.util.transactor.Transactor
-import com.internship.dao.impl.meta.implicits._
 import doobie.implicits._
-import doobie.implicits.javasql._
-import doobie.implicits.javatime._
-import doobie.postgres._
-import doobie.postgres.implicits._
-import doobie.postgres.pgisimplicits._
 import doobie.util.fragment.Fragment
 
 import java.time.LocalDate

@@ -2,10 +2,10 @@ package com.internship.constant
 
 object ConstantStrings {
 
-  val LOG_OUT_MESSAGE    = "logged out"
-  val LOG_IN_MESSAGE     = "logged in"
-  val SECRET_WORD        = "secretWord"
-  val preString          = "-" * 100
-  val LOGIN_HEADER_TOKEN = "loginToken"
+  val LogOutMessage = "logged out"
+  val LogInMessage  = "logged in"
+  val SecretWord    = "secretWord"
+  val PreString: String = "-" * 100
+  val LoginHeaderToken = "loginToken"
 
 }

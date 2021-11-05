@@ -2,12 +2,12 @@ package com.internship.router
 
 import cats.effect.Sync
 import cats.implicits._
-import com.internship.constant.ConstantStrings.LOGIN_HEADER_TOKEN
+import com.internship.constant.ConstantStrings.LoginHeaderToken
 import com.internship.domain.Role
 import com.internship.router.MarshalResponse.marshalResponse
 import com.internship.dto.{ProductDto, SmartSearchDto, UserTokenDto}
 import com.internship.error.RoleError.RoleNotMatch
-import com.internship.error.{RoleError, SupplierPortalError, TokenError}
+import com.internship.error.{SupplierPortalError, TokenError}
 import com.internship.error.TokenError.TokenFormatError
 import com.internship.service.ProductService
 import com.internship.util.TokenUtil
@@ -15,11 +15,6 @@ import org.http4s.{HttpRoutes, Request}
 import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
 import org.http4s.dsl.Http4sDsl
 import org.http4s.util.CaseInsensitiveString
-import io.circe.generic.auto._
-import io.circe._
-import io.circe.generic.JsonCodec
-import io.circe.parser._
-import io.circe.syntax._
 import com.internship.util.TraverseEitherTupleUtil._
 
 object ProductRoutes {
@@ -94,7 +89,7 @@ object ProductRoutes {
     }
 
     def getTokenRole(req: Request[F]): F[Either[TokenError, Role]] = for {
-      jsonToken <- req.headers.get(CaseInsensitiveString(LOGIN_HEADER_TOKEN)).get.value.pure[F] //error handle???
+      jsonToken <- req.headers.get(CaseInsensitiveString(LoginHeaderToken)).get.value.pure[F] //error handle???
       token      = TokenUtil.decodeToken(jsonToken).getOrElse(UserTokenDto())
       role       = Role.withNameInsensitiveEither(token.role).left.map(_ => TokenFormatError)
     } yield role

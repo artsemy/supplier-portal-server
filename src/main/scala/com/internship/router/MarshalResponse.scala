@@ -19,7 +19,7 @@ object MarshalResponse {
 
     def UserErrorToHttpResponse(error: K): F[Response[F]] =
       error match {
-        case e => Ok("error: " + e.message) //BadRequest
+        case e => Ok("error: " + e.message) //BadRequest, Ok for testing only
       }
 
     result

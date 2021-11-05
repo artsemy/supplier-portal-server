@@ -5,15 +5,9 @@ import cats.implicits._
 import com.internship.router.MarshalResponse.marshalResponse
 import com.internship.dto.OrderDto
 import com.internship.service.OrderService
-import org.http4s.{HttpRoutes, Request}
+import org.http4s.HttpRoutes
 import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
 import org.http4s.dsl.Http4sDsl
-import org.http4s.util.CaseInsensitiveString
-import io.circe.generic.auto._
-import io.circe._
-import io.circe.generic.JsonCodec
-import io.circe.parser._
-import io.circe.syntax._
 
 object OrderRoutes {
 
@@ -29,12 +23,12 @@ object OrderRoutes {
       marshalResponse(res)
     }
 
-    def read(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ GET -> Root / "portal" / "order" / "read" / id =>
+    def read(): HttpRoutes[F] = HttpRoutes.of[F] { case GET -> Root / "portal" / "order" / "read" / id =>
       val res = orderService.read(id)
       marshalResponse(res)
     }
 
-    def delete(): HttpRoutes[F] = HttpRoutes.of[F] { case req @ POST -> Root / "portal" / "order" / "delete" / id =>
+    def delete(): HttpRoutes[F] = HttpRoutes.of[F] { case POST -> Root / "portal" / "order" / "delete" / id =>
       val res = orderService.delete(id)
       marshalResponse(res)
     }
@@ -48,25 +42,25 @@ object OrderRoutes {
     }
 
     def addProduct(): HttpRoutes[F] = HttpRoutes.of[F] {
-      case req @ POST -> Root / "portal" / "order" / "add_product" / orderId / productId / amount =>
+      case POST -> Root / "portal" / "order" / "add_product" / orderId / productId / amount =>
         val res = orderService.addProduct(orderId, productId, amount)
         marshalResponse(res)
     }
 
     def removeProduct(): HttpRoutes[F] = HttpRoutes.of[F] {
-      case req @ POST -> Root / "portal" / "order" / "remove_product" / orderId / productId =>
+      case POST -> Root / "portal" / "order" / "remove_product" / orderId / productId =>
         val res = orderService.removeProduct(orderId, productId)
         marshalResponse(res)
     }
 
     def updateProductAmount(): HttpRoutes[F] = HttpRoutes.of[F] {
-      case req @ POST -> Root / "portal" / "order" / "update_amount" / orderProductId / amount =>
+      case POST -> Root / "portal" / "order" / "update_amount" / orderProductId / amount =>
         val res = orderService.updateProductAmount(orderProductId, amount)
         marshalResponse(res)
     }
 
     def readAllProductInOrder(): HttpRoutes[F] = HttpRoutes.of[F] {
-      case req @ GET -> Root / "portal" / "order" / "all_product" / orderId =>
+      case GET -> Root / "portal" / "order" / "all_product" / orderId =>
         val res = orderService.readAllProductInOrder(orderId)
         marshalResponse(res)
     }

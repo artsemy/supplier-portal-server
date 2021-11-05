@@ -24,7 +24,7 @@ class UserServiceImplTest extends AnyFreeSpec with MockFactory {
         val userService = new UserServiceImpl[IO](userDAO)
 
         val validAuthDto = AuthDto("Arty", "1234")
-        val expected     = Right(LOG_IN_MESSAGE) //fix later
+        val expected     = Right(LogInMessage) //fix later
 
         (userDAO.getUser _)
           .expects(*, *)
@@ -60,7 +60,7 @@ class UserServiceImplTest extends AnyFreeSpec with MockFactory {
         val userService = new UserServiceImpl[IO](userDAO)
 
         val validFlag = true
-        val expected  = Right(LOG_OUT_MESSAGE)
+        val expected  = Right(LogOutMessage)
 
         val actual = userService.logOut(validFlag).unsafeRunSync()
 
