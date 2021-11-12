@@ -7,8 +7,8 @@ import com.internship.constant.ConstantStrings.PreString
 import com.internship.dao.NotificationDAO
 import com.internship.domain.{NotificationCategory, NotificationSupplier}
 import com.internship.service.NotificationService
-import io.chrisdavenport.log4cats.{Logger, SelfAwareStructuredLogger}
-import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
+import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import java.time.LocalDate
 

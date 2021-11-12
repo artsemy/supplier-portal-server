@@ -7,7 +7,8 @@ import com.internship.domain.{Role, User}
 import com.internship.dto.AuthDto
 import com.internship.error.UserError._
 import com.internship.constant.ConstantStrings._
-import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
+import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.freespec.AnyFreeSpec
 

@@ -3,12 +3,13 @@ package com.internship.service.impl
 import cats.implicits._
 import cats.effect.{IO, Sync}
 import com.internship.dao.OrderDAO
-import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.freespec.AnyFreeSpec
 import com.internship.domain.{Order, OrderProduct, OrderStatus}
 import com.internship.service.validation.OrderValidator.OrderValidationError._
 import com.internship.util.ConverterToDto.convertOrderToDto
+import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 class OrderServiceImplTest extends AnyFreeSpec with MockFactory {
 

@@ -13,78 +13,65 @@ scalacOptions ++= Seq(
 )
 
 ThisBuild / scalafmtOnCompile := true
-
-val http4sVersion           = "0.21.7"
-val circeVersion            = "0.13.0"
-val circeConfigVersion      = "0.8.0"
-val doobieVersion           = "0.9.0"
-val catsVersion             = "2.2.0"
-val catsTaglessVersion      = "0.11"
-val catsEffectVersion       = "2.2.0"
-val epimetheusVersion       = "0.4.2"
-val catsScalacheckVersion   = "0.2.0"
-val log4CatsVersion         = "1.1.1"
-val scalaTestVersion        = "3.1.0.0-RC2"
-val h2Version               = "1.4.200"
-val enumeratumVersion       = "1.6.1"
-val dtoMapperChimneyVersion = "0.6.1"
+val http4s_V = "0.21.7"
+val doobie_V = "0.9.0"
 
 libraryDependencies ++= Seq(
-  "org.typelevel"            %% "cats-core"                     % catsVersion,
-  "org.typelevel"            %% "cats-effect"                   % catsEffectVersion,
-  "org.http4s"               %% "http4s-dsl"                    % http4sVersion,
-  "org.http4s"               %% "http4s-blaze-server"           % http4sVersion,
-  "org.http4s"               %% "http4s-blaze-client"           % http4sVersion,
-  "org.http4s"               %% "http4s-circe"                  % http4sVersion,
-  "org.http4s"               %% "http4s-jdk-http-client"        % "0.3.6",
-  "io.chrisdavenport"        %% "log4cats-core"                 % log4CatsVersion,
-  "io.chrisdavenport"        %% "log4cats-slf4j"                % log4CatsVersion,
-  "io.chrisdavenport"        %% "epimetheus-http4s"             % epimetheusVersion,
-  "io.chrisdavenport"        %% "cats-scalacheck"               % catsScalacheckVersion % Test,
-  "ch.qos.logback"            % "logback-classic"               % "1.2.3",
-  "com.codecommit"           %% "cats-effect-testing-scalatest" % "0.4.1"               % Test,
-  "org.scalatestplus"        %% "scalatestplus-scalacheck"      % scalaTestVersion      % Test,
-  "org.scalatestplus"        %% "selenium-2-45"                 % scalaTestVersion      % Test,
-  "org.typelevel"            %% "simulacrum"                    % "1.0.0",
-  "org.tpolecat"             %% "atto-core"                     % "0.8.0",
-  "org.fusesource.leveldbjni" % "leveldbjni-all"                % "1.8",
-  "org.tpolecat"             %% "doobie-core"                   % doobieVersion,
-  "org.tpolecat"             %% "doobie-h2"                     % doobieVersion,
-  "org.tpolecat"             %% "doobie-hikari"                 % doobieVersion,
-  "org.tpolecat"             %% "doobie-postgres"               % doobieVersion,
-  "org.tpolecat"             %% "doobie-scalatest"              % doobieVersion         % Test,
-  "org.mockito"              %% "mockito-scala"                 % "1.15.0"              % Test,
-  "org.scalaj"               %% "scalaj-http"                   % "2.4.2"               % Test,
-  "org.typelevel"            %% "cats-tagless-macros"           % catsTaglessVersion,
-  "com.h2database"            % "h2"                            % "1.4.200",
-  "eu.timepit"               %% "refined"                       % "0.9.17",
-  "org.slf4j"                 % "slf4j-nop"                     % "1.6.4",
-  "eu.timepit"               %% "refined"                       % "0.9.21",
-  "com.beachape"             %% "enumeratum"                    % enumeratumVersion,
-  "com.beachape"             %% "enumeratum-circe"              % enumeratumVersion,
-  "io.scalaland"             %% "chimney"                       % dtoMapperChimneyVersion,
-  "com.github.pureconfig"    %% "pureconfig"                    % "0.14.0",
-  "io.circe"                 %% "circe-config"                  % circeConfigVersion,
-  "io.circe"                 %% "circe-core"                    % circeVersion,
-  "io.circe"                 %% "circe-generic"                 % circeVersion,
-  "io.circe"                 %% "circe-generic-extras"          % circeVersion,
-  "io.circe"                 %% "circe-optics"                  % circeVersion,
-  "io.circe"                 %% "circe-parser"                  % circeVersion,
-  "io.circe"                 %% "circe-refined"                 % circeVersion,
-  "org.flywaydb"              % "flyway-core"                   % "6.2.4",
-  "com.github.jwt-scala"     %% "jwt-core"                      % "9.0.2",
-  "org.postgresql"            % "postgresql"                    % "42.2.6",
-  "org.scalamock"            %% "scalamock"                     % "5.1.0"               % Test,
-  "org.scalatest"            %% "scalatest"                     % "3.1.0"               % Test,
-  "io.monix"                 %% "monix"                         % "3.4.0",
-  "com.emarsys"              %% "scheduler"                     % "0.4.5",
+  "org.typelevel"        %% "cats-core"            % "2.6.1",
+  "org.typelevel"        %% "cats-effect"          % "2.5.2",
+  "org.http4s"           %% "http4s-core"          % http4s_V,
+  "org.http4s"           %% "http4s-dsl"           % http4s_V,
+  "org.http4s"           %% "http4s-blaze-server"  % http4s_V,
+  "org.http4s"           %% "http4s-blaze-client"  % http4s_V,
+  "org.http4s"           %% "http4s-circe"         % http4s_V,
+  "org.typelevel"        %% "log4cats-core"        % "1.3.1",
+  "org.typelevel"        %% "log4cats-slf4j"       % "1.3.1",
+  "ch.qos.logback"        % "logback-classic"      % "1.2.6",
+  "org.tpolecat"         %% "doobie-core"          % doobie_V,
+  "org.tpolecat"         %% "doobie-h2"            % doobie_V,
+  "org.tpolecat"         %% "doobie-hikari"        % doobie_V,
+  "org.tpolecat"         %% "doobie-postgres"      % doobie_V,
+  "org.tpolecat"         %% "doobie-scalatest"     % doobie_V  % Test,
+  "org.mockito"          %% "mockito-scala"        % "1.16.46" % Test,
+  "com.beachape"         %% "enumeratum"           % "1.7.0",
+  "com.beachape"         %% "enumeratum-circe"     % "1.7.0",
+  "io.circe"             %% "circe-config"         % "0.8.0",
+  "io.circe"             %% "circe-core"           % "0.14.1",
+  "io.circe"             %% "circe-generic"        % "0.14.1",
+  "io.circe"             %% "circe-generic-extras" % "0.14.1",
+  "io.circe"             %% "circe-optics"         % "0.14.1",
+  "io.circe"             %% "circe-parser"         % "0.14.1",
+  "io.circe"             %% "circe-refined"        % "0.14.1",
+  "org.flywaydb"          % "flyway-core"          % "6.2.4",
+  "com.github.jwt-scala" %% "jwt-core"             % "9.0.2",
+  "org.postgresql"        % "postgresql"           % "42.3.1",
+  "org.scalamock"        %% "scalamock"            % "5.1.0"   % Test,
+  "org.scalatest"        %% "scalatest"            % "3.2.9"   % Test,
+  "com.emarsys"          %% "scheduler"            % "0.4.5",
+  "javax.mail"            % "mail"                 % "1.4.7",
+  "com.minosiants"       %% "pencil"               % "0.6.7",
+  "io.github.jmcardon"   %% "tsec-password"        % "0.3.0-M2",
+  "org.scorexfoundation" %% "scrypto"              % "2.1.10"
+//  "co.fs2"               %% "fs2-core"             % "2.5.1",
+//  "co.fs2"               %% "fs2-io"               % "2.5.1"
+//  "io.monix"                 %% "monix"                    % "3.4.0",
+//  "org.typelevel"            %% "simulacrum"               % "1.0.1",
+//  "org.scalatestplus"        %% "scalatestplus-scalacheck" % scalaTestVersion % Test,
+//  "org.scalatestplus"        %% "selenium-2-45"            % scalaTestVersion % Test,
+//  "org.tpolecat"             %% "atto-core"                % "0.8.0",
+//  "org.fusesource.leveldbjni" % "leveldbjni-all"           % "1.8",
+//  "org.scalaj"               %% "scalaj-http"              % "2.4.2"          % Test,
+//  "org.typelevel"            %% "cats-tagless-macros"      % catsTaglessVersion,
+//  "org.slf4j"                 % "slf4j-nop"                % "1.6.4",
+//  "io.scalaland"             %% "chimney"                  % dtoMapperChimneyVersion,
+//  "com.github.pureconfig"    %% "pureconfig"               % "0.14.0",
+
+//  "javax.mail"                % "mail"                          % "1.4.7", //works
 //  "dev.profunktor"           %% "http4s-jwt-auth"               % "1.0.0",
-//  "org.typelevel"            %% "log4cats-core"                 % "2.1.1", // Only if you want to Support Any Backend
-//  "org.typelevel"            %% "log4cats-slf4j"                % "2.1.1" // Direct Slf4j Support - Recommended
 )
 
 addCompilerPlugin(
-  "org.typelevel" %% "kind-projector" % "0.13.0" cross CrossVersion.full
+  "org.typelevel" %% "kind-projector" % "0.13.2" cross CrossVersion.full
 )
 
 run / fork := true

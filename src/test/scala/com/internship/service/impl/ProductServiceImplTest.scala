@@ -7,9 +7,10 @@ import com.internship.domain.{Product, ProductStatus}
 import com.internship.dto.{ProductDto, SmartSearchDto}
 import com.internship.service.validation.ProductValidator.ProductValidationError._
 import com.internship.util.ConverterToDto.convertProductToDto
-import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.freespec.AnyFreeSpec
+import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import java.time.LocalDate
 

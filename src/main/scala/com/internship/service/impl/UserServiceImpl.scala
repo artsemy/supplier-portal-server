@@ -9,9 +9,10 @@ import com.internship.error.UserError._
 import com.internship.dto.AuthDto
 import com.internship.service.UserService
 import com.internship.domain._
-import io.chrisdavenport.log4cats.Logger
-import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
+import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 import com.internship.constant.ConstantStrings._
+import org.whispersystems.curve25519.Curve25519
 
 class UserServiceImpl[F[_]: Monad: Sync](userDAO: UserDAO[F]) extends UserService[F] {
 

@@ -4,7 +4,8 @@ import cats.implicits._
 import cats.effect.{IO, Sync}
 import com.internship.dao.SubscriptionDAO
 import com.internship.service.validation.SubscriptionValidator.SubscriptionValidatorError._
-import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
+import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.freespec.AnyFreeSpec
 

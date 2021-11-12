@@ -7,10 +7,10 @@ import com.internship.constant.ConstantStrings.PreString
 import com.internship.dao.SubscriptionDAO
 import com.internship.error.SubscriptionError
 import com.internship.service.SubscriptionService
-import io.chrisdavenport.log4cats.Logger
 import com.internship.util.TraverseEitherTupleUtil._
 import com.internship.service.validation.SubscriptionValidator._
-import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
+import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 case class SubscriptionServiceImpl[F[_]: Monad: Sync](subscriptionDAO: SubscriptionDAO[F])
   extends SubscriptionService[F] {

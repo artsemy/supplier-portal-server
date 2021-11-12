@@ -12,8 +12,8 @@ import com.internship.service.OrderService
 import com.internship.service.validation.OrderValidator
 import com.internship.util.TraverseEitherTupleUtil.{traverseThreeTypes, traverseTwoTypes}
 import com.internship.util.ConverterToDto.convertOrderToDto
-import io.chrisdavenport.log4cats.Logger
-import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
+import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 class OrderServiceImpl[F[_]: Monad: Sync](orderDAO: OrderDAO[F]) extends OrderService[F] {
 

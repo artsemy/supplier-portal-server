@@ -11,8 +11,8 @@ import com.internship.error.ProductError
 import com.internship.service.validation.ProductValidator
 import com.internship.util.TraverseEitherTupleUtil.traverseTwoTypes
 import com.internship.util.ConverterToDto.convertProductToDto
-import io.chrisdavenport.log4cats.Logger
-import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
+import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 class ProductServiceImpl[F[_]: Monad: Sync](productDAO: ProductDAO[F]) extends ProductService[F] {
 
