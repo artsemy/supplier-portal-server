@@ -12,7 +12,7 @@ import com.internship.domain._
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import com.internship.constant.ConstantStrings._
-import org.whispersystems.curve25519.Curve25519
+import com.internship.util.PasswordUtil._
 
 class UserServiceImpl[F[_]: Monad: Sync](userDAO: UserDAO[F]) extends UserService[F] {
 
@@ -41,7 +41,7 @@ class UserServiceImpl[F[_]: Monad: Sync](userDAO: UserDAO[F]) extends UserServic
 
   private def encodePass(password: String): F[String] = for {
     _   <- Logger[F].info(s"$PreString user service encodePass: try")
-    pass = password.map(x => x) //add encryption
+    pass = encode(password)
     _   <- Logger[F].info(s"$PreString user service encodePass: done")
   } yield pass
 

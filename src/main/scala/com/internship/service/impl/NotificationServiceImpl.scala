@@ -7,6 +7,7 @@ import com.internship.constant.ConstantStrings.PreString
 import com.internship.dao.NotificationDAO
 import com.internship.domain.{NotificationCategory, NotificationSupplier}
 import com.internship.service.NotificationService
+import com.internship.util.EmailSender.sendEmail
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
@@ -34,13 +35,13 @@ class NotificationServiceImpl[F[_]: Monad: Sync](notificationDAO: NotificationDA
 
   private def emailCategory(list: List[NotificationCategory]): F[Unit] = for {
     _ <- Logger[F].info(s"$PreString email category: try")
-    _  = list.foreach(x => println(x)) //real email sending
+    _  = list.foreach(x => sendEmail(to = x.userEmail, subject = "category " + x.categoryId, text = x.productName))
     _ <- Logger[F].info(s"$PreString email category: finish")
   } yield ()
 
   private def emailSupplier(list: List[NotificationSupplier]): F[Unit] = for {
     _ <- Logger[F].info(s"$PreString email supplier: try")
-    _  = list.foreach(x => println(x)) //real email sending
+    _  = list.foreach(x => sendEmail(to = x.userEmail, subject = "supplier " + x.supplierId, text = x.productName))
     _ <- Logger[F].info(s"$PreString email supplier: finish")
   } yield ()
 

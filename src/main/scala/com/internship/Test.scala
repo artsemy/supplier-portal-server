@@ -8,6 +8,7 @@ import javax.mail.internet.MimeMessage
 import java.util.{Base64, Properties}
 import com.internship.HiddenConsatnt._
 import com.sun.mail.smtp.SMTPTransport
+import courier.Defaults.executionContext
 import fs2.io.tcp.SocketGroup
 import fs2.io.tls.TLSContext
 import org.bouncycastle.jcajce.provider.symmetric.ChaCha.Base
@@ -15,6 +16,7 @@ import org.whispersystems.curve25519.Curve25519
 
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
+import scala.concurrent.Await
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
@@ -25,7 +27,7 @@ object Test {
 //    f2()
   }
 
-  def f1() = {
+  def f1() = { //works
     val prop = new Properties()
 //    prop.put("mail.transport.protocol", "smtps")
     prop.put("mail.smtps.host", "smtp.gmail.com")
@@ -57,7 +59,7 @@ object Test {
     System.out.println("Done")
   }
 
-  def f2() = {
+  def f2() = { //works
     import java.util.Properties
     import javax.mail.Message
     import javax.mail.Session
@@ -188,12 +190,23 @@ object Test3 {
 }
 
 object Test4 {
+  import courier._
+  import scala.concurrent.duration._
+
   def main(args: Array[String]): Unit = {
-    val curveImpl = Curve25519.getInstance(Curve25519.JAVA)
-    val keyPair   = curveImpl.generateKeyPair()
-    val message   = "message"
-    val sig       = curveImpl.calculateSignature(keyPair.getPrivateKey, message.getBytes)
-    println(curveImpl.verifySignature(keyPair.getPublicKey, message.getBytes, sig))
+    val mailer = Mailer("smtp.gmail.com", 587)
+      .auth(true)
+      .as(username, password)
+      .startTls(true)()
+    val future = mailer(
+      Envelope
+        .from(username.addr)
+        .to("artsemy.k@mail.ru".addr)
+//        .cc("dad@gmail.com".addr)
+        .subject("olala")
+        .content(Text("lolo"))
+    )
+    Await.ready(future, 5.seconds)
   }
 }
 
@@ -219,5 +232,16 @@ object Test5 { //works
     val res2 = cipher.doFinal(res3)
 
     println(res2.map(_.toChar).mkString)
+  }
+}
+
+object Test6 {
+  import com.internship.util.PasswordUtil._
+  def main(args: Array[String]): Unit = {
+    val str = "1234"
+    val s1  = encode(str)
+    println(s1)
+    val s2 = decode(s1)
+    println(s2)
   }
 }

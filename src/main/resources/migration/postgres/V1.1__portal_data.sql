@@ -1,11 +1,11 @@
 INSERT INTO users(login, password, role, email)
 VALUES
-('arty1', '1234', 'CLIENT', 'email1@gmail.com'),
-('arty2', '1234', 'CLIENT', 'email2@gmail.com'),
-('arty3', '1234', 'CLIENT', 'email3@gmail.com'),
-('arty4', '1234', 'CLIENT', 'email4@gmail.com'),
-('arty5', '1234', 'MANAGER', 'email5@gmail.com'),
-('arty6', '1234', 'COURIER', 'email6@gmail.com');
+('arty1', 'AfGuzeGzUV8koEuz0jCJsw==', 'CLIENT', 'artsemy.k@mail.ru'),
+('arty2', 'AfGuzeGzUV8koEuz0jCJsw==', 'CLIENT', 'artsemy.k@mail.ru'),
+('arty3', 'AfGuzeGzUV8koEuz0jCJsw==', 'CLIENT', 'artsemy.k@mail.ru'),
+('arty4', 'AfGuzeGzUV8koEuz0jCJsw==', 'CLIENT', 'artsemy.k@mail.ru'),
+('arty5', 'AfGuzeGzUV8koEuz0jCJsw==', 'MANAGER', 'artsemy.k@mail.ru'),
+('arty6', 'AfGuzeGzUV8koEuz0jCJsw==', 'COURIER', 'artsemy.k@mail.ru');
 
 INSERT INTO groups(name)
 VALUES

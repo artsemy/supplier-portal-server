@@ -1,6 +1,6 @@
 INSERT INTO users(login, password, role, email)
 VALUES
-('zero_courier', '1234', 'COURIER', 'email0@gmail.com');
+('zero_courier', '1234', 'COURIER', 'artsemy.k@mail.ru');
 
 UPDATE users SET id = 0 WHERE id = 7;
 
