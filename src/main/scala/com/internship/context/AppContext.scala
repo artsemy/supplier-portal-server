@@ -1,37 +1,34 @@
 package com.internship.context
 
-import cats.effect.{Async, ContextShift, Resource}
+import cats.effect.{Async, Concurrent, ContextShift, Resource}
+import com.internship.auth.Tokens
 import org.http4s.HttpApp
 import org.http4s.implicits._
+import dev.profunktor.redis4cats.Redis
+import dev.profunktor.redis4cats.effect.Log.Stdout._
 import com.internship.conf.app.AppConf
 import com.internship.conf.db.{migrator, transactor}
-import com.internship.dao.{OrderDAO, ProductDAO, SubscriptionDAO, UserDAO}
-import com.internship.router.{OrderRoutes, ProductRoutes, SubscriptionRouter, UserRoutes}
-import com.internship.service.{OrderService, ProductService, SubscriptionService, UserService}
-import cats.implicits._
+import com.internship.modules.{Repositories, Routers, Security, Services}
 
 object AppContext {
-
-  def setUp[F[_]: ContextShift: Async](conf: AppConf): Resource[F, HttpApp[F]] = for {
+  def setUp[F[_]: ContextShift: Async: Concurrent](conf: AppConf): Resource[F, HttpApp[F]] = for {
     tx <- transactor[F](conf.db)
 
     migrator <- Resource.eval(migrator[F](conf.db))
     _        <- Resource.eval(migrator.migrate())
 
-    userDao     = UserDAO.of[F](tx)
-    userService = UserService.of(userDao)
+    redis <- Redis[F].utf8(conf.redis.url)
 
-    productDao     = ProductDAO.of[F](tx)
-    productService = ProductService.of(productDao)
+    repositories = Repositories.of[F](tx)
 
-    orderDao     = OrderDAO.of[F](tx)
-    orderService = OrderService.of(orderDao)
+    security = Security.of[F](conf, redis, repositories.userDAO)
 
-    subscriptionDAO     = SubscriptionDAO.of[F](tx)
-    subscriptionService = SubscriptionService.of(subscriptionDAO)
+    tokens = Tokens.make(conf.tokenConf)
 
-    httpApp = (UserRoutes.routes[F](userService) <+> ProductRoutes.routes[F](productService) <+>
-      OrderRoutes.routes[F](orderService) <+> SubscriptionRouter.routes[F](subscriptionService)).orNotFound
-  } yield httpApp
+    services = Services.of[F](repositories, redis, tokens)
+
+    routes = Routers.of[F](services, security).routes.orNotFound
+
+  } yield routes
 
 }

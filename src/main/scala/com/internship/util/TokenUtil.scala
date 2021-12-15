@@ -1,7 +1,7 @@
 package com.internship.util
 
 import com.internship.constant.ConstantStrings.SecretWord
-import com.internship.domain.User
+import com.internship.domain.FullUser
 import com.internship.dto.UserTokenDto
 import com.internship.error.TokenError.{TokenFormatError, TokenNoUserError}
 import com.internship.error.{TokenError, UserError}
@@ -13,7 +13,7 @@ import scala.util.{Failure, Success, Try}
 
 object TokenUtil {
 
-  def generateToken(eitherUser: Either[UserError, User]): Either[TokenError, String] = {
+  def generateToken(eitherUser: Either[UserError, FullUser]): Either[TokenError, String] = {
     val res = for {
       user <- eitherUser
       token = encodeToken(UserTokenDto().fromUser(user))

@@ -18,7 +18,7 @@ class UserServiceImpl[F[_]: Monad: Sync](userDAO: UserDAO[F]) extends UserServic
 
   implicit def unsafeLogger[F[_]: Sync] = Slf4jLogger.getLogger[F]
 
-  override def logIn(authDto: AuthDto): F[Either[UserError, User]] = {
+  override def logIn(authDto: AuthDto): F[Either[UserError, FullUser]] = {
     for {
       _    <- Logger[F].info(s"$PreString user service logIn: try to login")
       user <- getUser(authDto)
@@ -32,7 +32,7 @@ class UserServiceImpl[F[_]: Monad: Sync](userDAO: UserDAO[F]) extends UserServic
     _      <- Logger[F].info(s"$PreString user service logOut: answer generated")
   } yield message
 
-  private def getUser(authDto: AuthDto): F[Either[UserError, User]] = for {
+  private def getUser(authDto: AuthDto): F[Either[UserError, FullUser]] = for {
     _    <- Logger[F].info(s"$PreString user service getUser: try")
     pass <- encodePass(authDto.password)
     user <- userDAO.getUser(authDto.login, pass).map(op => op.toRight(UserNotFound()))

@@ -1,21 +1,20 @@
 package com.internship.service.impl
 
 import cats.implicits._
-import cats.Monad
 import cats.effect.Sync
 import com.internship.constant.ConstantStrings.PreString
 import com.internship.dao.NotificationDAO
 import com.internship.domain.{NotificationCategory, NotificationSupplier}
 import com.internship.service.NotificationService
 import com.internship.util.EmailSender.sendEmail
-import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
+import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import java.time.LocalDate
 
-class NotificationServiceImpl[F[_]: Monad: Sync](notificationDAO: NotificationDAO[F]) extends NotificationService[F] {
+class NotificationServiceImpl[F[_]: Sync](notificationDAO: NotificationDAO[F]) extends NotificationService[F] {
 
-  implicit def unsafeLogger[F[_]: Sync]: SelfAwareStructuredLogger[F] = Slf4jLogger.getLogger[F]
+  implicit def unsafeLogger = Slf4jLogger.getLogger[F]
 
   override def sendMessageCategoryUpdate(): F[Int] = for {
     _       <- Logger[F].info(s"$PreString message category: try")

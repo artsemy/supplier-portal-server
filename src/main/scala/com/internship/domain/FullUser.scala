@@ -1,6 +1,6 @@
 package com.internship.domain
 
-case class User(
+case class FullUser(
   login:    String,
   password: String,
   role:     Role,

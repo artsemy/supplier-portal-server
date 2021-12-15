@@ -3,7 +3,7 @@ package com.internship.service.impl
 import cats.implicits._
 import cats.effect.{IO, Sync}
 import com.internship.dao.UserDAO
-import com.internship.domain.{Role, User}
+import com.internship.domain.{FullUser, Role}
 import com.internship.dto.AuthDto
 import com.internship.error.UserError._
 import com.internship.constant.ConstantStrings._
@@ -24,7 +24,7 @@ class UserServiceImplTest extends AnyFreeSpec with MockFactory {
         val userService = new UserServiceImpl[IO](userDAO)
 
         val validAuthDto = AuthDto("Arty", "1234")
-        val user         = User("login", "pass", Role.Client, "em5@gmail.com")
+        val user         = FullUser("login", "pass", Role.Client, "em5@gmail.com")
         val expected     = Right(user)
 
         (userDAO.getUser _)
